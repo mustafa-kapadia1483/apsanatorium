@@ -21,6 +21,7 @@ const config = {
 				background: 'hsl(var(--background) / <alpha-value>)',
 				foreground: 'hsl(var(--foreground) / <alpha-value>)',
 				apsanatorium_blue: '#010171',
+				apsanatorium_font_blue: '#010165',
 				footer_bg: '#2f2f4b',
 				primary: {
 					DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
@@ -57,7 +58,7 @@ const config = {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			fontFamily: {
-				sans: [...fontFamily.sans],
+				sans: ["'Lato'", ...fontFamily.sans],
 				cursive: "'Tangerine', cursive"
 			}
 		}
