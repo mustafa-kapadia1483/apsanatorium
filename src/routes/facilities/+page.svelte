@@ -1,6 +1,7 @@
 <script>
 	import { AirVent, ShowerHead, Refrigerator, Tv, Sofa, LampDesk } from 'lucide-svelte';
 	import Wardrobe from '$lib/components/icons/wardrobe.svelte';
+	import PageCointainer from '../../components/pagecontainer.svelte';
 
 	let generalFacilities = [
 		{
@@ -25,8 +26,7 @@
 	];
 </script>
 
-<div class="sm:container border-r-2 border-l-2 border-gray-200 sm:px-0 pb-3">
-	<h1 class="text-4xl bg-gray-100 pl-2 py-3">Facilities</h1>
+<PageCointainer title="Facilities">
 	<div class="container md:grid md:grid-cols-3">
 		<div class="ml-2">
 			<h2 class="text-2xl mt-5 mb-5">Room Facilities</h2>
@@ -93,4 +93,4 @@
 			</ul>
 		</div>
 	</div>
-</div>
+</PageCointainer>
