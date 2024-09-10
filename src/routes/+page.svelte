@@ -34,7 +34,9 @@
 	Welcome to Sir A P Sanatorium Trust
 </h1>
 
-<div class="card-container mt-20 md:mt-10 container md:grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+<div
+	class="card-container mt-20 md:mt-5 container md:grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8"
+>
 	<Card.Root class="mt-20 border-gray-500 bg-gradient-to-b from-white to-gray-200">
 		<Card.Header>
 			<Card.Title>
