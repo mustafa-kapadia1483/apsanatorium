@@ -37,6 +37,10 @@
 			]
 		},
 		{
+			name: 'ziarats',
+			link: '/ziarats'
+		},
+		{
 			name: 'photo gallery',
 			link: '/photo-gallery'
 		},
