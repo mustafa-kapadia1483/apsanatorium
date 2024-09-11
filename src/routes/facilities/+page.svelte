@@ -1,7 +1,7 @@
 <script>
 	import { AirVent, ShowerHead, Refrigerator, Tv, Sofa, LampDesk } from 'lucide-svelte';
 	import Wardrobe from '$lib/components/icons/wardrobe.svelte';
-	import PageCointainer from '../../components/pagecontainer.svelte';
+	import PageCointainer from '$lib/components/pagecontainer.svelte';
 
 	let generalFacilities = [
 		{

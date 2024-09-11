@@ -31,7 +31,7 @@
 				},
 				{
 					name: 'sightseeing',
-					link: '#sightseeing'
+					link: '#sight-seeing'
 				},
 				{ name: 'transport', link: '#transport' }
 			]
