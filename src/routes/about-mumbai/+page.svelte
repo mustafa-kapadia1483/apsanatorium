@@ -28,61 +28,61 @@
 
 	let sightSeeingCards = [
 		{
-			img: 'https://apsanatorium.com/images/gatewayofindia.jpg',
+			img: '/images/sight_seeing/gatewayofindia.jpg',
 			title: 'Gateway Of India',
 			content:
 				"Mumbai's most famous landmark, The Gateway of India, is situated at Apollo Bunder. It was designed by George Wikket. It was built to commemorate the visit of King George V and Queen Mary to India in 1911.\n                    <br>\n                    <br>\n                    Through this magnificent monument, numerous viceroys and governors were welcomed to India as they disembarked from their steamers, hence the name."
 		},
 		{
-			img: 'https://apsanatorium.com/images/FloraFountain.jpg',
+			img: '/images/sight_seeing/FloraFountain.jpg',
 			title: 'Flora Fountain(Hutatma Chowk)',
 			content:
 				'This marvellous fountain was built in 1869, in honor of Sir Henry Bartle and Edward Frere. It is situated in the heart of the Mumbai city at a junction of five streets. The fountain has a figure of "Flora", the Roman Goddess of Flowers at the top.'
 		},
 		{
-			img: 'https://apsanatorium.com/images/JuhuBeach.jpg',
+			img: '/images/sight_seeing/JuhuBeach.jpg',
 			title: 'Chowpatty Beach & Juhu Beach',
 			content:
 				'Chowpatty beach is situated on Marine Drive. This beach is well-known for it\'s stalls selling "Bhel-Puri and Pani-Puri chat" a favourite fast food among the Mumbaites and visitors to the city.<br>\n                    <br>\n                    Juhu Beach is the most popular beach in Mumbai which is 30 kms away from the heart of Mumbai. It is a long stretch of sandy beach from Santacruz to Vile-Parle. This is a very popular beach for picnic.<br>\n                    Both these beaches are crowded on week-ends.'
 		},
 		{
-			img: 'https://apsanatorium.com/images/KamalaNehruPark.jpg',
+			img: '/images/sight_seeing/KamalaNehruPark.jpg',
 			title: 'Kamala Nehru Park & Hanging Gardens',
 			content:
 				'The giant Old woman\'s shoe in the Kamala Nehru Park is very popular with children to play in. One gets a panoramic view of parts of the city from these parks situated at the height of Malabar Hill. When seen at night, the view of street lights of Marine Drive resemble a dazzling bejewelled "Queen\'s Necklace".<br>\n                    <br>\n                    At sunset, the waterfall and fountains in the park are lit with colorful lights which are worth seeing. The Hanging Gardens surrounded by beautiful flower beds and lush green lawns are very popular as picnic spots.'
 		},
 		{
-			img: 'https://apsanatorium.com/images/nehruplanetarium.jpg',
+			img: '/images/sight_seeing/nehruplanetarium.jpg',
 			title: 'Nehru Planetarium and Science Centre',
 			content:
 				"This Science Centre is named after Pandit Jawaharlal Nehru, India's first Prime-Minister. It is situated in Worli. It has a computer laboratory, mobile science exhibition units, a heritage hall, an auditorium, inflatable dome planetarium, science library and a children's science park.<br>\n                    <br>\n                    The sky-show at the planetarium is very interesting with it's narration, sound effects and slide projections which combines entertainment with education. It has a library containing a large collection of books on astronomy, astrophysics and space sciences."
 		},
 		{
-			img: 'https://apsanatorium.com/images/princeofwalesmuseum.jpg',
+			img: '/images/sight_seeing/princeofwalesmuseum.jpg',
 			title: 'The Prince of Wales Museum',
 			content:
 				'This museum stands not too far from the Gateway of India. It has a priceless collection of art, sculpture, china and other antics. Carefully presereved, this mid-Victorian Gothic style building built in 1904 with beautiful gardens surrounding it, is worth visiting in Mumbai.'
 		},
 		{
-			img: 'https://apsanatorium.com/images/TaraporewalaAquarium.jpg',
+			img: '/images/sight_seeing/TaraporewalaAquarium.jpg',
 			title: 'Taraporewala Aquarium',
 			content:
 				"Situated on the Marine Drive, this aquarium has fish in varying shapes, sizes and colour. It's a delight for children as well as grown-ups."
 		},
 		{
-			img: 'https://apsanatorium.com/images/veermatajeejabaiudyan.jpg',
+			img: '/images/sight_seeing/veermatajeejabaiudyan.jpg',
 			title: 'Victoria Gardens (Veermata Jeejabai Bhonsle Udyan)',
 			content:
 				'These botanical and zoological gardens have an interesting collection of flora and fauna. Apart from these, it also has a beautiful gateway, an arched architctural screen and a museum building in the Greco-Roman Style. These gardens are situated in Byculla.'
 		},
 		{
-			img: 'https://apsanatorium.com/images/esselworld.jpg',
+			img: '/images/sight_seeing/esselworld.jpg',
 			title: 'Essel World - Amusement Park',
 			content:
 				'Essel World is located on Gorai Island. It offers over 40 exciting rides, games, and attractions. The Water Kingdom is said to be the largest of its kind in Asia. This international-style theme park and amusement centre situated close to Gorai Beach is perfect for a one-day holiday.\n                    <br>\n                    <br>\n                    Special ferries get you across to the park and the entrance fee normally takes care of a fixed number of rides, which include the standard roller coaster and adventure themes, plus a water world section where kids can literally run amok. Summer is usually crowded, but the place also offers low budget monsoon packages and special deals on weekends.'
 		},
 		{
-			img: 'https://apsanatorium.com/images/imagica.jpg',
+			img: '/images/sight_seeing/imagica.jpg',
 			title: 'Imagica',
 			content:
 				"A place so interesting you'd wish you were here every day. A place where   the fun begins and never ends. A place where you'd be friends with a   talking dog, dine with a lion chef and fly with an elephant.\n                    <br>\n                    <br>\n                    A place where you’d experience zero gravity, fight Mogambo, feel the thrill of exciting rides."
