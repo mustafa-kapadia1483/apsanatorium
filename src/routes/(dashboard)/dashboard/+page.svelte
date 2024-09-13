@@ -90,9 +90,68 @@
 	let todayFreeRoomsArray = [
 		804, 803, 802, 801, 704, 702, 701, 601, 504, 503, 502, 304, 302, 301, 203, 201, 104
 	];
+
+	let currentGuestListArray = [
+		{
+			roomId: '703',
+			startDate: '10-Sep-2024',
+			endDate: '14-Sep-2024',
+			bookingId: 'B24-1899',
+			guestList: [
+				{
+					name: 'Shaikh Aliasgar bhai Mulla Abbas bhai Manco',
+					eJamaatID: '20324198'
+				},
+				{
+					name: 'Mohammed bhai Shaikh Aliasgar bhai Manco',
+					eJamaatID: '30361053'
+				},
+				{
+					name: 'Sarrah bai Shaikh Aliasgar bhai Manco',
+					eJamaatID: '30361054'
+				},
+				{
+					name: 'Masuma bai Shaikh Aliasgar bhai Manco',
+					eJamaatID: '30361050'
+				}
+			]
+		},
+		{
+			roomId: '703',
+			startDate: '10-Sep-2024',
+			endDate: '14-Sep-2024',
+			bookingId: 'B24-1899',
+			guestList: [
+				{
+					name: 'Shaikh Aliasgar bhai Mulla Abbas bhai Manco',
+					eJamaatID: '20324198'
+				},
+				{
+					name: 'Mohammed bhai Shaikh Aliasgar bhai Manco',
+					eJamaatID: '30361053'
+				},
+				{
+					name: 'Sarrah bai Shaikh Aliasgar bhai Manco',
+					eJamaatID: '30361054'
+				},
+				{
+					name: 'Masuma bai Shaikh Aliasgar bhai Manco',
+					eJamaatID: '30361050'
+				}
+			]
+		}
+	];
+
+	let guestListCount = 0;
+	$: {
+		guestListCount = currentGuestListArray.reduce(
+			(total, guestListObj) => total + guestListObj.guestList.length,
+			0
+		);
+	}
 </script>
 
-<div class="px-4">
+<div class="px-4 mb-8">
 	<div class="mt-2 grid grid-cols-7 text-sm gap-4">
 		<ul class="text-red-900 font-semibold space-y-1 shadow-md p-2">
 			<RightArrowLi>New Walk In</RightArrowLi>
@@ -167,7 +226,7 @@
 
 			<!-- Edit Booking Start -->
 			<DashboardCard>
-				<DashboardCardSmallHeading variant="blue">
+				<DashboardCardSmallHeading class="text-center" variant="blue">
 					<h2>Edit booking</h2>
 				</DashboardCardSmallHeading>
 
@@ -188,7 +247,7 @@
 			<!-- Edit Booking End -->
 			<!-- Next Ejamaat ID Start -->
 			<DashboardCard>
-				<DashboardCardSmallHeading variant="blue">
+				<DashboardCardSmallHeading class="text-center" variant="blue">
 					<h2>Next Ejamaat</h2>
 				</DashboardCardSmallHeading>
 				<p class="ml-2 mb-1"><strong>Ejamaat ID:</strong> <span>99990000</span></p>
@@ -196,7 +255,7 @@
 			<!-- Next Ejamaat ID End -->
 			<!-- Mass Mailing Start -->
 			<DashboardCard>
-				<DashboardCardSmallHeading variant="blue">
+				<DashboardCardSmallHeading class="text-center" variant="blue">
 					<h2>Mass mailing</h2>
 				</DashboardCardSmallHeading>
 				<a href="/mass-mail" class="text-xs block ml-2 mb-1 text-red-900"
@@ -206,7 +265,7 @@
 			<!-- Mass Mailing End -->
 			<!-- Waitlist Booking Start -->
 			<DashboardCard>
-				<DashboardCardSmallHeading variant="blue">
+				<DashboardCardSmallHeading class="text-center" variant="blue">
 					<h2>Waitlist Booking</h2>
 				</DashboardCardSmallHeading>
 				<ul class="space-y-2 px-1 mt-2">
@@ -234,6 +293,41 @@
 				<a href="/waiting-list" class="text-red-900 text-xs ml-1">Click here for Wait List.</a>
 			</DashboardCard>
 			<!-- Waitlist Booking End -->
+			<!-- Current Guest List Start -->
+			<DashboardCard class="pb-2">
+				<DashboardCardSmallHeading variant="blue">
+					<h2 class="ml-2 space-x-0.5 py-2">
+						<span class="block">Current Guest List</span>
+						<span class="block">No. of Guest: {guestListCount}</span>
+					</h2>
+				</DashboardCardSmallHeading>
+				{#each currentGuestListArray as { roomId, startDate, endDate, bookingId, guestList }}
+					<div class="border border-black mx-2 mt-5">
+						<h3 class="text-red-900 left-2 relative px-0.5">
+							<span class="bg-white px-0.5 font-bold -top-2.5 absolute">
+								Room ID: {roomId}
+							</span>
+							<span class="bg-white px-0.5 mr-4 text-sm absolute -top-2.5 right-0">
+								Booking ID: {bookingId}
+							</span>
+						</h3>
+						<h4 class="mt-5 text-xs ml-2 space-x-2">
+							<span>Start Date: {startDate}</span>
+							<span>End Date: {endDate}</span>
+						</h4>
+
+						<ol class="mt-1 mx-2 space-y-1 mb-2">
+							{#each guestList as { name, eJamaatID }, guestIndex}
+								<li class="text-sm flex justify-between border-b border-gray-500">
+									<span>{guestIndex + 1}. {name}</span>
+									<span>eJamaatID: {eJamaatID}</span>
+								</li>
+							{/each}
+						</ol>
+					</div>
+				{/each}
+			</DashboardCard>
+			<!--  Current Guest List End -->
 		</div>
 	</div>
 </div>
