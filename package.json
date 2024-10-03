@@ -35,6 +35,8 @@
 		"clsx": "^2.1.1",
 		"embla-carousel-svelte": "^8.2.1",
 		"lucide-svelte": "^0.438.0",
+		"msnodesqlv8": "^4.2.1",
+		"mssql": "^11.0.1",
 		"tailwind-merge": "^2.5.2",
 		"tailwind-variants": "^0.2.1"
 	}

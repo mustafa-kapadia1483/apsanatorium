@@ -1,7 +1,10 @@
 <script>
 	import DashboardCardSmallHeading from '$lib/components/ui/dashboard/dashboard-card-small-heading.svelte';
 	import DashboardCard from '$lib/components/ui/dashboard/dashboard-card.svelte';
+	import EnclosedCard from '$lib/components/ui/dashboard/enclosed-card.svelte';
 	import RightArrowLi from '$lib/components/ui/dashboard/right-arrow-li.svelte';
+
+	export let data;
 
 	let roomStatusArray = [
 		{
@@ -87,68 +90,12 @@
 		}
 	];
 
-	let todayFreeRoomsArray = [
-		804, 803, 802, 801, 704, 702, 701, 601, 504, 503, 502, 304, 302, 301, 203, 201, 104
-	];
+	let { currentGuestListArray, todayFreeRoomsArray, waitlistBookingReport } = data;
 
-	let currentGuestListArray = [
-		{
-			roomId: '703',
-			startDate: '10-Sep-2024',
-			endDate: '14-Sep-2024',
-			bookingId: 'B24-1899',
-			guestList: [
-				{
-					name: 'Shaikh Aliasgar bhai Mulla Abbas bhai Manco',
-					eJamaatID: '20324198'
-				},
-				{
-					name: 'Mohammed bhai Shaikh Aliasgar bhai Manco',
-					eJamaatID: '30361053'
-				},
-				{
-					name: 'Sarrah bai Shaikh Aliasgar bhai Manco',
-					eJamaatID: '30361054'
-				},
-				{
-					name: 'Masuma bai Shaikh Aliasgar bhai Manco',
-					eJamaatID: '30361050'
-				}
-			]
-		},
-		{
-			roomId: '703',
-			startDate: '10-Sep-2024',
-			endDate: '14-Sep-2024',
-			bookingId: 'B24-1899',
-			guestList: [
-				{
-					name: 'Shaikh Aliasgar bhai Mulla Abbas bhai Manco',
-					eJamaatID: '20324198'
-				},
-				{
-					name: 'Mohammed bhai Shaikh Aliasgar bhai Manco',
-					eJamaatID: '30361053'
-				},
-				{
-					name: 'Sarrah bai Shaikh Aliasgar bhai Manco',
-					eJamaatID: '30361054'
-				},
-				{
-					name: 'Masuma bai Shaikh Aliasgar bhai Manco',
-					eJamaatID: '30361050'
-				}
-			]
-		}
-	];
-
-	let guestListCount = 0;
-	$: {
-		guestListCount = currentGuestListArray.reduce(
-			(total, guestListObj) => total + guestListObj.guestList.length,
-			0
-		);
-	}
+	let guestListCount = currentGuestListArray.reduce(
+		(total, guestListObj) => total + guestListObj.guestList.length,
+		0
+	);
 </script>
 
 <div class="px-4 mb-8">
@@ -166,7 +113,7 @@
 			<RightArrowLi>Masters</RightArrowLi>
 			<RightArrowLi>Room Maintenance</RightArrowLi>
 			<RightArrowLi>Booking Cancel</RightArrowLi>
-			<RightArrowLi class="border-b border-b-gray-500 pb-1">Wait RightArrowList</RightArrowLi>
+			<RightArrowLi class="border-b border-b-gray-500 pb-1">Wait List</RightArrowLi>
 			<RightArrowLi class="border-b border-b-gray-500 pb-1">Log reports</RightArrowLi>
 			<RightArrowLi>Messaging</RightArrowLi>
 		</ul>
@@ -268,25 +215,35 @@
 				<DashboardCardSmallHeading class="text-center" variant="blue">
 					<h2>Waitlist Booking</h2>
 				</DashboardCardSmallHeading>
-				<ul class="space-y-2 px-1 mt-2">
+				<ul class="space-y-1 px-1 mt-2">
 					<li class="flex justify-between items-center">
 						<span>New waitlist created today</span><span
-							class="bg-yellow-300 text-apsanatorium_font_blue text-lg px-2">1</span
+							class="bg-yellow-300 text-apsanatorium_font_blue text-lg px-2"
+							>{waitlistBookingReport.NewwaitlistCreatedToday}</span
+						>
+					</li>
+					<li class="flex justify-between items-center">
+						<span>Waitlist pending for next 0 to 7 days: </span><span
+							class="bg-yellow-300 text-apsanatorium_font_blue text-lg px-2"
+							>{waitlistBookingReport.Next0to7day}</span
 						>
 					</li>
 					<li class="flex justify-between items-center">
 						<span>Waitlist pending for next 8 to 30 days: </span><span
-							class="bg-yellow-300 text-apsanatorium_font_blue text-lg px-2">1</span
+							class="bg-yellow-300 text-apsanatorium_font_blue text-lg px-2"
+							>{waitlistBookingReport.Next8to30day}</span
 						>
 					</li>
 					<li class="flex justify-between items-center">
 						<span>Waitlist pending for next 31 to 60 days: </span><span
-							class="bg-yellow-300 text-apsanatorium_font_blue text-lg px-2">1</span
+							class="bg-yellow-300 text-apsanatorium_font_blue text-lg px-2"
+							>{waitlistBookingReport.Next31to60day}</span
 						>
 					</li>
 					<li class="flex justify-between items-center">
 						<span>Waitlist pending for next more than 60 days: </span><span
-							class="bg-yellow-300 text-apsanatorium_font_blue text-lg px-2">1</span
+							class="bg-yellow-300 text-apsanatorium_font_blue text-lg px-2"
+							>{waitlistBookingReport.Next61aboveday}</span
 						>
 					</li>
 				</ul>
@@ -301,16 +258,9 @@
 						<span class="block">No. of Guest: {guestListCount}</span>
 					</h2>
 				</DashboardCardSmallHeading>
+
 				{#each currentGuestListArray as { roomId, startDate, endDate, bookingId, guestList }}
-					<div class="border border-black mx-2 mt-5">
-						<h3 class="text-red-900 left-2 relative px-0.5">
-							<span class="bg-white px-0.5 font-bold -top-2.5 absolute">
-								Room ID: {roomId}
-							</span>
-							<span class="bg-white px-0.5 mr-4 text-sm absolute -top-2.5 right-0">
-								Booking ID: {bookingId}
-							</span>
-						</h3>
+					<EnclosedCard startText={`Room ID: ${roomId}`} endText={`Booking ID: ${bookingId}`}>
 						<h4 class="mt-5 text-xs ml-2 space-x-2">
 							<span>Start Date: {startDate}</span>
 							<span>End Date: {endDate}</span>
@@ -324,10 +274,61 @@
 								</li>
 							{/each}
 						</ol>
-					</div>
+					</EnclosedCard>
 				{/each}
 			</DashboardCard>
 			<!--  Current Guest List End -->
+		</div>
+
+		<div class="col-span-2 space-y-4">
+			<DashboardCard>
+				<DashboardCardSmallHeading variant="red">
+					<h2 class="ml-1">Saifee Rooms</h2>
+				</DashboardCardSmallHeading>
+				<div>No Saifee Rooms for Today</div>
+			</DashboardCard>
+
+			<DashboardCard>
+				<DashboardCardSmallHeading>
+					<h2 class="ml-1">Today's Check IN</h2>
+				</DashboardCardSmallHeading>
+				<EnclosedCard startText="Confirmed Booking" class="pb-1 mb-2">
+					<EnclosedCard startText="Check In: 2-Oct-2024" class="pb-1 mb-2">
+						<ol class="mt-3 mx-3 space-y-2">
+							<li class="border-b border-b-black last:border-b-0">
+								<div>
+									<span class="font-bold">Shaikh Tayyabali bhai Shaikh Fakhruddin bhai Salim</span>
+									<span>(20351021)</span>
+								</div>
+								<a href="/booking/b24-2111" class="text-red-900 text-xs underline"
+									>BookingID: B24-2111, Room: 704</a
+								>
+							</li>
+							<li>
+								<div>
+									<span class="font-bold">Shaikh Tayyabali bhai Shaikh Fakhruddin bhai Salim</span>
+									<span>(20351021)</span>
+								</div>
+								<a href="/booking/b24-2111" class="text-red-900 text-xs underline"
+									>BookingID: B24-2111, Room: 704</a
+								>
+							</li>
+						</ol>
+					</EnclosedCard>
+				</EnclosedCard>
+			</DashboardCard>
+
+			<DashboardCard>
+				<DashboardCardSmallHeading>
+					<h2 class="ml-1">Today's Check OUT</h2>
+				</DashboardCardSmallHeading>
+			</DashboardCard>
+
+			<DashboardCard>
+				<DashboardCardSmallHeading variant="red">
+					<h2 class="ml-1">Early Check Out with Final Payment Done</h2>
+				</DashboardCardSmallHeading>
+			</DashboardCard>
 		</div>
 	</div>
 </div>
