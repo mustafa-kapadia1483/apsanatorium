@@ -6,91 +6,13 @@
 
 	export let data;
 
-	let roomStatusArray = [
-		{
-			date: '10-Sep',
-			day: 'Tue',
-			isToday: false,
-			booked: '2',
-			occupied: '9',
-			blocked: '9',
-			available: '18'
-		},
-		{
-			date: '11-Sep',
-			day: 'Wed',
-			isToday: false,
-			booked: '2',
-			occupied: '10',
-			blocked: '9',
-			available: '17'
-		},
-		{
-			date: '12-Sep',
-			day: 'Thu',
-			isToday: false,
-			booked: '5',
-			occupied: '7',
-			blocked: '11',
-			available: '15'
-		},
-		{
-			date: '13-Sep',
-			day: 'Fri',
-			isToday: false,
-			booked: '11',
-			occupied: '6',
-			blocked: '12',
-			available: '9'
-		},
-		{
-			date: '14-Sep',
-			day: 'Sat',
-			isToday: false,
-			booked: '20',
-			occupied: '3',
-			blocked: '12',
-			available: '3'
-		},
-		{
-			date: '15-Sep',
-			day: 'Sun',
-			isToday: false,
-			booked: '18',
-			occupied: '3',
-			blocked: '12',
-			available: '5'
-		},
-		{
-			date: '16-Sep',
-			day: 'Mon',
-			isToday: false,
-			booked: '21',
-			occupied: '3',
-			blocked: '12',
-			available: '2'
-		},
-		{
-			date: '17-Sep',
-			day: 'Tue',
-			isToday: false,
-			booked: '23',
-			occupied: '3',
-			blocked: '12',
-			available: '0'
-		},
-		{
-			date: '18-Sep',
-			day: 'Wed',
-			isToday: false,
-			booked: '24',
-			occupied: '2',
-			blocked: '12',
-			available: '0'
-		}
-	];
-
-	let { currentGuestListArray, todayFreeRoomsArray, waitlistBookingReport } = data;
+	let {
+		currentGuestListArray,
+		todayFreeRoomsArray,
+		waitlistBookingReport,
+		roomStatusArray,
+		todaysCheckInObject
+	} = data;
 
 	let guestListCount = currentGuestListArray.reduce(
 		(total, guestListObj) => total + guestListObj.guestList.length,
@@ -293,6 +215,23 @@
 					<h2 class="ml-1">Today's Check IN</h2>
 				</DashboardCardSmallHeading>
 				<EnclosedCard startText="Confirmed Booking" class="pb-1 mb-2">
+					{#each Object.keys(todaysCheckInObject) as date}
+						<EnclosedCard startText={`Check In: ${date}`} class="pb-1 mb-2">
+							<ol class="mt-3 mx-3 space-y-2">
+								{#each todaysCheckInObject[date] as { BookingID, eJamaatID, Name, RoomID }}
+									<li class="border-b border-b-black last:border-b-0">
+										<div>
+											<span class="font-bold">{Name}</span>
+											<span>({eJamaatID})</span>
+										</div>
+										<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+											>BookingID: {BookingID}, Room: {RoomID}</a
+										>
+									</li>
+								{/each}
+							</ol>
+						</EnclosedCard>
+					{/each}
 					<EnclosedCard startText="Check In: 2-Oct-2024" class="pb-1 mb-2">
 						<ol class="mt-3 mx-3 space-y-2">
 							<li class="border-b border-b-black last:border-b-0">

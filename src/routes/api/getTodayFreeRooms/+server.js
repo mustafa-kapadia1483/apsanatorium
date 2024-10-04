@@ -44,7 +44,6 @@ export async function GET() {
 		);
 
 		query = `Select * from FreeRoomDetails Where FreeRoomID in (${roomTypeIdsList.join(', ')}) Order by RoomID desc`;
-		// console.log(query);
 		result = await pool.request().query(query);
 
 		return json(result.recordset.map(({ RoomID }) => RoomID));
