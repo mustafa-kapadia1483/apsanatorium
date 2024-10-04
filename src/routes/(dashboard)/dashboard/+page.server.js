@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit';
 import strftime from '../../../utils/strftime';
+import groupBy from '../../../utils/groupBy';
 
 // Function to format date to 'DD-MMM-YYYY'
 function formatDate(dateString) {
@@ -47,26 +48,6 @@ function convertBookings(bookings) {
 	return result;
 }
 
-function groupByDate(data) {
-	return data.reduce((acc, current) => {
-		const date = strftime('%d-%b-%g', new Date(current.SDate)); // Extract just the date (YYYY-MM-DD)
-
-		if (!acc[date]) {
-			acc[date] = []; // Initialize an empty array if this date doesn't exist
-		}
-
-		acc[date].push({
-			BookingID: current.BookingID,
-			eJamaatID: current.eJamaatID,
-			BookingStatus: current.BookingStatus,
-			Name: current.Name,
-			RoomID: current.RoomID
-		});
-
-		return acc;
-	}, {});
-}
-
 // Function to convert Room status to desired format
 function convertRoomStatusArray(roomStatusArray, totalRoomsCount) {
 	return roomStatusArray.map((item) => {
@@ -100,13 +81,31 @@ export async function load({ params, url }) {
 	const { roomStatusArray, totalRoomsCount } = await response.json();
 
 	response = await fetch(`${url.origin}/api/getTodaysCheckIn`);
-	const todaysCheckInArray = await response.json();
+	let todaysCheckInArray = await response.json();
+
+	todaysCheckInArray = todaysCheckInArray.map(({ SDate, ...rest }) => {
+		return { date: strftime('%d-%b-%g', new Date(SDate)), ...rest };
+	});
+
+	let todaysCheckInObject = groupBy(todaysCheckInArray, 'BookingStatus');
+
+	for (let key of Object.keys(todaysCheckInObject)) {
+		todaysCheckInObject[key] = groupBy(todaysCheckInObject[key], 'date');
+	}
+
+	response = await fetch(`${url.origin}/api/getSaifeeRoomList`);
+	let saifeeRoomList = await response.json();
+
+	saifeeRoomList = saifeeRoomList.map(({ SDate, ...rest }) => {
+		return { date: strftime('%d-%b-%g', new Date(SDate)), ...rest };
+	});
 
 	return {
 		currentGuestListArray: convertBookings(currentGuestListArray),
 		todayFreeRoomsArray,
 		waitlistBookingReport,
 		roomStatusArray: convertRoomStatusArray(roomStatusArray, totalRoomsCount),
-		todaysCheckInObject: groupByDate(todaysCheckInArray)
+		todaysCheckInObject,
+		saifeeRoomList
 	};
 }

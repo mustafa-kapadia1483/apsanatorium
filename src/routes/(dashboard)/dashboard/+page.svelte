@@ -11,7 +11,8 @@
 		todayFreeRoomsArray,
 		waitlistBookingReport,
 		roomStatusArray,
-		todaysCheckInObject
+		todaysCheckInObject,
+		saifeeRoomList
 	} = data;
 
 	let guestListCount = currentGuestListArray.reduce(
@@ -207,54 +208,51 @@
 				<DashboardCardSmallHeading variant="red">
 					<h2 class="ml-1">Saifee Rooms</h2>
 				</DashboardCardSmallHeading>
-				<div>No Saifee Rooms for Today</div>
+				{#if saifeeRoomList.length == 0}
+					<div>No Saifee Rooms for Today</div>
+				{/if}
+				{#each saifeeRoomList as { BookingID, eJamaatID, Name, date, RoomID }}
+					<EnclosedCard startText={`Date: ${date}`} class="pb-1 mb-2">
+						<ol class="mt-3 mx-3 space-y-2">
+							<li class="border-b border-b-black last:border-b-0">
+								<div>
+									<span class="font-bold">{Name}</span>
+									<span>({eJamaatID})</span>
+								</div>
+								<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+									>BookingID: {BookingID}, Room: {RoomID}</a
+								>
+							</li>
+						</ol>
+					</EnclosedCard>
+				{/each}
 			</DashboardCard>
 
 			<DashboardCard>
 				<DashboardCardSmallHeading>
 					<h2 class="ml-1">Today's Check IN</h2>
 				</DashboardCardSmallHeading>
-				<EnclosedCard startText="Confirmed Booking" class="pb-1 mb-2">
-					{#each Object.keys(todaysCheckInObject) as date}
-						<EnclosedCard startText={`Check In: ${date}`} class="pb-1 mb-2">
-							<ol class="mt-3 mx-3 space-y-2">
-								{#each todaysCheckInObject[date] as { BookingID, eJamaatID, Name, RoomID }}
-									<li class="border-b border-b-black last:border-b-0">
-										<div>
-											<span class="font-bold">{Name}</span>
-											<span>({eJamaatID})</span>
-										</div>
-										<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
-											>BookingID: {BookingID}, Room: {RoomID}</a
-										>
-									</li>
-								{/each}
-							</ol>
-						</EnclosedCard>
-					{/each}
-					<EnclosedCard startText="Check In: 2-Oct-2024" class="pb-1 mb-2">
-						<ol class="mt-3 mx-3 space-y-2">
-							<li class="border-b border-b-black last:border-b-0">
-								<div>
-									<span class="font-bold">Shaikh Tayyabali bhai Shaikh Fakhruddin bhai Salim</span>
-									<span>(20351021)</span>
-								</div>
-								<a href="/booking/b24-2111" class="text-red-900 text-xs underline"
-									>BookingID: B24-2111, Room: 704</a
-								>
-							</li>
-							<li>
-								<div>
-									<span class="font-bold">Shaikh Tayyabali bhai Shaikh Fakhruddin bhai Salim</span>
-									<span>(20351021)</span>
-								</div>
-								<a href="/booking/b24-2111" class="text-red-900 text-xs underline"
-									>BookingID: B24-2111, Room: 704</a
-								>
-							</li>
-						</ol>
+				{#each Object.keys(todaysCheckInObject) as bookingStatus}
+					<EnclosedCard startText={`${bookingStatus} Booking`} class="pb-1 mb-2">
+						{#each Object.keys(todaysCheckInObject[bookingStatus]) as date}
+							<EnclosedCard startText={`Check In: ${date}`} class="pb-1 mb-2">
+								<ol class="mt-3 mx-3 space-y-2">
+									{#each todaysCheckInObject[bookingStatus][date] as { BookingID, eJamaatID, Name, RoomID }}
+										<li class="border-b border-b-black last:border-b-0">
+											<div>
+												<span class="font-bold">{Name}</span>
+												<span>({eJamaatID})</span>
+											</div>
+											<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+												>BookingID: {BookingID}, Room: {RoomID}</a
+											>
+										</li>
+									{/each}
+								</ol>
+							</EnclosedCard>
+						{/each}
 					</EnclosedCard>
-				</EnclosedCard>
+				{/each}
 			</DashboardCard>
 
 			<DashboardCard>
