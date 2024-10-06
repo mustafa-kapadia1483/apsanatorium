@@ -3,6 +3,10 @@
 	let username = 'Qusai';
 </script>
 
+<svelte:head>
+	<title>AP Sanatorium</title>
+</svelte:head>
+
 <div class="px-4 py-2 flex justify-between border-b border-b-gray-400 text-sm">
 	<div>Welcome <strong>{username}</strong></div>
 	<div class="text-red-900 space-x-3">

@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
-import strftime from '../../../utils/strftime';
-import groupBy from '../../../utils/groupBy';
+import { strftime } from '$lib/utils/date-utils';
+import groupBy from '$lib/utils/groupBy';
 
 // Function to format date to 'DD-MMM-YYYY'
 function formatDate(dateString) {
@@ -100,12 +100,55 @@ export async function load({ params, url }) {
 		return { date: strftime('%d-%b-%g', new Date(SDate)), ...rest };
 	});
 
+	response = await fetch(`${url.origin}/api/getTodaysCheckOut`);
+	let todaysCheckOutList = await response.json();
+
+	todaysCheckOutList = todaysCheckOutList.map(({ eDate, ...rest }) => {
+		return { eDate: strftime('%d-%b-%g', new Date(eDate)), ...rest };
+	});
+
+	let todaysCheckOutObject = groupBy(todaysCheckOutList, 'eDate');
+
+	response = await fetch(`${url.origin}/api/getEarlyCheckOut`);
+	let earlyCheckOutList = await response.json();
+
+	earlyCheckOutList = earlyCheckOutList.map(({ eDate, ...rest }) => {
+		return { eDate: strftime('%d-%b-%g', new Date(eDate)), ...rest };
+	});
+
+	let earlyCheckOutObject = groupBy(earlyCheckOutList, 'eDate');
+
+	response = await fetch(`${url.origin}/api/getStayRecordsToBeCreated`);
+	let stayRecordsToBeCreatedArray = await response.json();
+
+	response = await fetch(`${url.origin}/api/getOutStandingStayRecords`);
+	let outStandingStayRecordsArray = await response.json();
+
+	response = await fetch(`${url.origin}/api/getBookingsToBeConfirmed`);
+	let bookingsToBeConfirmedArray = await response.json();
+
+	bookingsToBeConfirmedArray = bookingsToBeConfirmedArray.map(({ TimeStamp, ...rest }) => {
+		const BOOKING_EXPIRES_IN_DAYS = 3;
+		let timeStampDate = new Date(TimeStamp);
+		timeStampDate.setDate(timeStampDate.getDate() + BOOKING_EXPIRES_IN_DAYS);
+
+		return {
+			expireDate: strftime('%e-%b-%Y', timeStampDate),
+			...rest
+		};
+	});
+
 	return {
 		currentGuestListArray: convertBookings(currentGuestListArray),
 		todayFreeRoomsArray,
 		waitlistBookingReport,
 		roomStatusArray: convertRoomStatusArray(roomStatusArray, totalRoomsCount),
 		todaysCheckInObject,
-		saifeeRoomList
+		saifeeRoomList,
+		todaysCheckOutObject,
+		earlyCheckOutObject,
+		stayRecordsToBeCreatedArray,
+		outStandingStayRecordsArray,
+		bookingsToBeConfirmedArray
 	};
 }

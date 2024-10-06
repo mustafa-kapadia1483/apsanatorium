@@ -1,12 +1,10 @@
-/* Port of strftime() by T. H. Doan (https://thdoan.github.io/strftime/)
- *
- * Day of year (%j) code based on Joe Orost's answer:
- * http://stackoverflow.com/questions/8619879/javascript-calculate-the-day-of-the-year-1-366
- *
- * Week number (%V) code based on Taco van den Broek's prototype:
- * http://techblog.procurios.nl/k/news/view/33796/14863/calculate-iso-8601-week-and-year-in-javascript.html
+/**
+ * Port of strftime() by T. H. Doan (https://thdoan.github.io/strftime/)
+ * @param {string} sFormat - Format in which date string needs to be returned in
+ * @param {Date|null} date - Date object for which formatted string will be returned
+ * @returns {string}
  */
-export default function strftime(sFormat, date) {
+export function strftime(sFormat, date = null) {
 	if (typeof sFormat !== 'string') {
 		return '';
 	}
@@ -99,4 +97,14 @@ export default function strftime(sFormat, date) {
 			}[sMatch] || '') + '' || sMatch
 		);
 	});
+}
+
+/**
+ * Checks whether a date is today or no
+ * @param {Date|string} date - Date that needs to be checked whether it'today
+ * @returns {Boolean}
+ */
+export function isToday(date) {
+	const DATE_FORMAT = '%Y%m%d';
+	return strftime(DATE_FORMAT) == strftime(DATE_FORMAT, new Date(date));
 }

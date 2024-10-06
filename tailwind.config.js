@@ -22,6 +22,7 @@ const config = {
 				foreground: 'hsl(var(--foreground) / <alpha-value>)',
 				apsanatorium_blue: '#010171',
 				apsanatorium_font_blue: '#010165',
+				highlight: 'yellow',
 				footer_bg: '#2f2f4b',
 				primary: {
 					DEFAULT: 'hsl(var(--primary) / <alpha-value>)',

@@ -3,6 +3,7 @@
 	import DashboardCard from '$lib/components/ui/dashboard/dashboard-card.svelte';
 	import EnclosedCard from '$lib/components/ui/dashboard/enclosed-card.svelte';
 	import RightArrowLi from '$lib/components/ui/dashboard/right-arrow-li.svelte';
+	import { isToday } from '$lib/utils/date-utils.js';
 
 	export let data;
 
@@ -12,7 +13,12 @@
 		waitlistBookingReport,
 		roomStatusArray,
 		todaysCheckInObject,
-		saifeeRoomList
+		saifeeRoomList,
+		todaysCheckOutObject,
+		earlyCheckOutObject,
+		stayRecordsToBeCreatedArray,
+		outStandingStayRecordsArray,
+		bookingsToBeConfirmedArray
 	} = data;
 
 	let guestListCount = currentGuestListArray.reduce(
@@ -209,7 +215,7 @@
 					<h2 class="ml-1">Saifee Rooms</h2>
 				</DashboardCardSmallHeading>
 				{#if saifeeRoomList.length == 0}
-					<div>No Saifee Rooms for Today</div>
+					<p class="text-center font-bold">No Saifee Rooms for Today</p>
 				{/if}
 				{#each saifeeRoomList as { BookingID, eJamaatID, Name, date, RoomID }}
 					<EnclosedCard startText={`Date: ${date}`} class="pb-1 mb-2">
@@ -255,16 +261,140 @@
 				{/each}
 			</DashboardCard>
 
-			<DashboardCard>
+			<DashboardCard class="pb-2">
 				<DashboardCardSmallHeading>
 					<h2 class="ml-1">Today's Check OUT</h2>
 				</DashboardCardSmallHeading>
+				{#each Object.keys(todaysCheckOutObject) as endDate}
+					<EnclosedCard startText={`Check Out: ${endDate}`} highlight={isToday(endDate)}>
+						<ol class="mt-3 mb-2 mx-2 space-y-1">
+							{#each todaysCheckOutObject[endDate] as { Name, eJamaatID, BookingID, RoomID }}
+								<li class="border-b border-b-black last:border-b-0">
+									<div>
+										<span class="font-bold">{Name}</span>
+										<span>({eJamaatID})</span>
+									</div>
+									<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+										>BookingID: {BookingID}, Room: {RoomID}</a
+									>
+								</li>
+							{/each}
+						</ol>
+					</EnclosedCard>
+				{/each}
+			</DashboardCard>
+
+			<DashboardCard class="pb-2">
+				<DashboardCardSmallHeading variant="red">
+					<h2 class="ml-1">Early Check Out with Final Payment Done</h2>
+				</DashboardCardSmallHeading>
+				{#each Object.keys(earlyCheckOutObject) as endDate}
+					<EnclosedCard startText={`Check Out: ${endDate}`} highlight={isToday(endDate)}>
+						<ol class="mt-3 mb-2 mx-2 space-y-1">
+							{#each earlyCheckOutObject[endDate] as { Name, eJamaatID, BookingID, RoomID }}
+								<li class="border-b border-b-black last:border-b-0">
+									<div>
+										<span class="font-bold">{Name}</span>
+										<span>({eJamaatID})</span>
+									</div>
+									<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+										>BookingID: {BookingID}, Room: {RoomID}</a
+									>
+								</li>
+							{/each}
+						</ol>
+					</EnclosedCard>
+				{/each}
+			</DashboardCard>
+		</div>
+
+		<div class="col-span-2 space-y-4">
+			<DashboardCard>
+				<DashboardCardSmallHeading variant="red">
+					<h2 class="ml-1">Stay Records to be created</h2>
+				</DashboardCardSmallHeading>
+				{#if stayRecordsToBeCreatedArray.length == 0}
+					<p class="text-center font-bold">No Stay Records to be created</p>
+				{/if}
+				<ol class="mt-1 mx-1 space-y-1">
+					{#each stayRecordsToBeCreatedArray as { BookingID, eJamaatID, Name, RoomID }}
+						<li class="border-b border-b-black last:border-b-0">
+							<div>
+								<span class="font-bold">{Name}</span>
+								<span>({eJamaatID})</span>
+							</div>
+							<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+								>BookingID: {BookingID}, Room: {RoomID}</a
+							>
+						</li>
+					{/each}
+				</ol>
 			</DashboardCard>
 
 			<DashboardCard>
 				<DashboardCardSmallHeading variant="red">
-					<h2 class="ml-1">Early Check Out with Final Payment Done</h2>
+					<h2 class="ml-1">Outstanding Stay Records</h2>
 				</DashboardCardSmallHeading>
+				{#if outStandingStayRecordsArray.length == 0}
+					<p class="text-center font-bold">No outstanding Stay Records</p>
+				{/if}
+				<ol class="mt-1 mx-1 space-y-1">
+					{#each outStandingStayRecordsArray as { BookingID, eJamaatID, Name, StayRecID, Balance }}
+						<li class="border-b border-b-black last:border-b-0">
+							<div>
+								<span class="font-bold">{Name}</span>
+								<span>({eJamaatID})</span>
+							</div>
+							<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+								>BookingID: {BookingID}, Stay ID: {StayRecID}, Balance Amount: Rs.{Balance}</a
+							>
+						</li>
+					{/each}
+				</ol>
+			</DashboardCard>
+
+			<DashboardCard>
+				<DashboardCardSmallHeading>
+					<h2 class="ml-1">Bookings to be CONFIRMED</h2>
+				</DashboardCardSmallHeading>
+				{#if bookingsToBeConfirmedArray.length == 0}
+					<p class="text-center font-bold">No Bookings to be confirmed</p>
+				{/if}
+				<ol class="mt-1 mx-1 space-y-1">
+					{#each bookingsToBeConfirmedArray as { BookingID, eJamaatID, Name, expireDate }}
+						<li class="border-b border-b-black last:border-b-0">
+							<div>
+								<span class="font-bold">{Name}</span>
+								<span>({eJamaatID})</span>
+							</div>
+							<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+								>BookingID: {BookingID}, Expires on {expireDate}
+							</a>
+						</li>
+					{/each}
+				</ol>
+			</DashboardCard>
+
+			<DashboardCard>
+				<DashboardCardSmallHeading>
+					<h2 class="ml-1">Auto Expired Bookings</h2>
+				</DashboardCardSmallHeading>
+				{#if [].length == 0}
+					<p class="text-center font-bold">No Auto Expired Bookings</p>
+				{/if}
+				<ol class="mt-1 mx-1 space-y-1">
+					{#each [] as { BookingID, eJamaatID, Name, expireDate }}
+						<li class="border-b border-b-black last:border-b-0">
+							<div>
+								<span class="font-bold">{Name}</span>
+								<span>({eJamaatID})</span>
+							</div>
+							<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+								>BookingID: {BookingID}, Expires on {expireDate}
+							</a>
+						</li>
+					{/each}
+				</ol>
 			</DashboardCard>
 		</div>
 	</div>
