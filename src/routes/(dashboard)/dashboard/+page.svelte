@@ -18,7 +18,10 @@
 		earlyCheckOutObject,
 		stayRecordsToBeCreatedArray,
 		outStandingStayRecordsArray,
-		bookingsToBeConfirmedArray
+		bookingsToBeConfirmedArray,
+		autoExpiredBookingsArray,
+		pastConfirmedBookingsNotCheckedInArray,
+		guestWithZeroDepositObject
 	} = data;
 
 	let guestListCount = currentGuestListArray.reduce(
@@ -379,22 +382,89 @@
 				<DashboardCardSmallHeading>
 					<h2 class="ml-1">Auto Expired Bookings</h2>
 				</DashboardCardSmallHeading>
-				{#if [].length == 0}
+				{#if autoExpiredBookingsArray.length == 0}
 					<p class="text-center font-bold">No Auto Expired Bookings</p>
 				{/if}
 				<ol class="mt-1 mx-1 space-y-1">
-					{#each [] as { BookingID, eJamaatID, Name, expireDate }}
+					{#each autoExpiredBookingsArray as { BookingID, eJamaatID, Name, expiredDate }}
 						<li class="border-b border-b-black last:border-b-0">
 							<div>
 								<span class="font-bold">{Name}</span>
 								<span>({eJamaatID})</span>
 							</div>
 							<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
-								>BookingID: {BookingID}, Expires on {expireDate}
+								>BookingID: {BookingID}, Expired on {expiredDate}
 							</a>
 						</li>
 					{/each}
 				</ol>
+			</DashboardCard>
+
+			<DashboardCard>
+				<DashboardCardSmallHeading>
+					<h2 class="ml-1">Past Confirm Bookings not Check In</h2>
+				</DashboardCardSmallHeading>
+				{#if pastConfirmedBookingsNotCheckedInArray.length == 0}
+					<p class="text-center font-bold">No Past Confirm Bookings not Check In</p>
+				{/if}
+				<ol class="mt-1 mx-1 space-y-1">
+					{#each pastConfirmedBookingsNotCheckedInArray as { BookingID, eJamaatID, Name, checkInDate }}
+						<li class="border-b border-b-black last:border-b-0">
+							<div>
+								<span class="font-bold">{Name}</span>
+								<span>({eJamaatID})</span>
+							</div>
+							<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+								>BookingID: {BookingID} to CheckIn on {checkInDate}
+							</a>
+						</li>
+					{/each}
+				</ol>
+			</DashboardCard>
+
+			<DashboardCard>
+				<DashboardCardSmallHeading>
+					<h2 class="ml-1">Guest with Zero Deposit</h2>
+				</DashboardCardSmallHeading>
+				{#if pastConfirmedBookingsNotCheckedInArray.length == 0}
+					<p class="text-center font-bold">No Guest with Zero Deposit</p>
+				{/if}
+				<ol class="mt-1 mx-1 space-y-1">
+					{#each pastConfirmedBookingsNotCheckedInArray as { BookingID, eJamaatID, Name, checkInDate }}
+						<li class="border-b border-b-black last:border-b-0">
+							<div>
+								<span class="font-bold">{Name}</span>
+								<span>({eJamaatID})</span>
+							</div>
+							<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+								>BookingID: {BookingID} to CheckIn on {checkInDate}
+							</a>
+						</li>
+					{/each}
+				</ol>
+			</DashboardCard>
+
+			<DashboardCard class="pb-2">
+				<DashboardCardSmallHeading variant="red">
+					<h2 class="ml-1">Guest with Zero Deposit</h2>
+				</DashboardCardSmallHeading>
+				{#each Object.keys(guestWithZeroDepositObject) as startDate}
+					<EnclosedCard startText={`Check Out: ${startDate}`} highlight={isToday(startDate)}>
+						<ol class="mt-3 mb-2 mx-2 space-y-1">
+							{#each guestWithZeroDepositObject[startDate] as { Name, eJamaatID, BookingID }}
+								<li class="border-b border-b-black last:border-b-0">
+									<div>
+										<span class="font-bold">{Name}</span>
+										<span>({eJamaatID})</span>
+									</div>
+									<a href={`/booking/${BookingID}`} class="text-red-900 text-xs underline"
+										>BookingID: {BookingID}</a
+									>
+								</li>
+							{/each}
+						</ol>
+					</EnclosedCard>
+				{/each}
 			</DashboardCard>
 		</div>
 	</div>

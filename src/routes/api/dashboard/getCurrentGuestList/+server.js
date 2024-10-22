@@ -1,6 +1,6 @@
 import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../mssql.config';
+import config from '../../../../../mssql.config';
 
 function formatDateToSQL(date) {
 	const padZero = (num) => (num < 10 ? '0' + num : num);

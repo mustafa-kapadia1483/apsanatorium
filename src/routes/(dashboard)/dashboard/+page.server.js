@@ -68,19 +68,19 @@ function convertRoomStatusArray(roomStatusArray, totalRoomsCount) {
 }
 
 export async function load({ params, url }) {
-	let response = await fetch(`${url.origin}/api/getCurrentGuestList`);
+	let response = await fetch(`${url.origin}/api/dashboard/getCurrentGuestList`);
 	const currentGuestListArray = await response.json();
 
-	response = await fetch(`${url.origin}/api/getTodayFreeRooms`);
+	response = await fetch(`${url.origin}/api/dashboard/getTodayFreeRooms`);
 	const todayFreeRoomsArray = await response.json();
 
-	response = await fetch(`${url.origin}/api/getWaitlistBookingReport`);
+	response = await fetch(`${url.origin}/api/dashboard/getWaitlistBookingReport`);
 	const waitlistBookingReport = await response.json();
 
-	response = await fetch(`${url.origin}/api/getRoomStatus`);
+	response = await fetch(`${url.origin}/api/dashboard/getRoomStatus`);
 	const { roomStatusArray, totalRoomsCount } = await response.json();
 
-	response = await fetch(`${url.origin}/api/getTodaysCheckIn`);
+	response = await fetch(`${url.origin}/api/dashboard/getTodaysCheckIn`);
 	let todaysCheckInArray = await response.json();
 
 	todaysCheckInArray = todaysCheckInArray.map(({ SDate, ...rest }) => {
@@ -93,14 +93,14 @@ export async function load({ params, url }) {
 		todaysCheckInObject[key] = groupBy(todaysCheckInObject[key], 'date');
 	}
 
-	response = await fetch(`${url.origin}/api/getSaifeeRoomList`);
+	response = await fetch(`${url.origin}/api/dashboard/getSaifeeRoomList`);
 	let saifeeRoomList = await response.json();
 
 	saifeeRoomList = saifeeRoomList.map(({ SDate, ...rest }) => {
 		return { date: strftime('%d-%b-%g', new Date(SDate)), ...rest };
 	});
 
-	response = await fetch(`${url.origin}/api/getTodaysCheckOut`);
+	response = await fetch(`${url.origin}/api/dashboard/getTodaysCheckOut`);
 	let todaysCheckOutList = await response.json();
 
 	todaysCheckOutList = todaysCheckOutList.map(({ eDate, ...rest }) => {
@@ -109,7 +109,7 @@ export async function load({ params, url }) {
 
 	let todaysCheckOutObject = groupBy(todaysCheckOutList, 'eDate');
 
-	response = await fetch(`${url.origin}/api/getEarlyCheckOut`);
+	response = await fetch(`${url.origin}/api/dashboard/getEarlyCheckOut`);
 	let earlyCheckOutList = await response.json();
 
 	earlyCheckOutList = earlyCheckOutList.map(({ eDate, ...rest }) => {
@@ -118,13 +118,13 @@ export async function load({ params, url }) {
 
 	let earlyCheckOutObject = groupBy(earlyCheckOutList, 'eDate');
 
-	response = await fetch(`${url.origin}/api/getStayRecordsToBeCreated`);
+	response = await fetch(`${url.origin}/api/dashboard/getStayRecordsToBeCreated`);
 	let stayRecordsToBeCreatedArray = await response.json();
 
-	response = await fetch(`${url.origin}/api/getOutStandingStayRecords`);
+	response = await fetch(`${url.origin}/api/dashboard/getOutStandingStayRecords`);
 	let outStandingStayRecordsArray = await response.json();
 
-	response = await fetch(`${url.origin}/api/getBookingsToBeConfirmed`);
+	response = await fetch(`${url.origin}/api/dashboard/getBookingsToBeConfirmed`);
 	let bookingsToBeConfirmedArray = await response.json();
 
 	bookingsToBeConfirmedArray = bookingsToBeConfirmedArray.map(({ TimeStamp, ...rest }) => {
@@ -138,6 +138,40 @@ export async function load({ params, url }) {
 		};
 	});
 
+	response = await fetch(`${url.origin}/api/dashboard/getAutoExpiredBookings`);
+	let autoExpiredBookingsArray = await response.json();
+
+	autoExpiredBookingsArray = autoExpiredBookingsArray.map(({ BookingExpiryDate, ...rest }) => {
+		return {
+			expiredDate: strftime('%e-%b-%Y', new Date(BookingExpiryDate[0])),
+			...rest
+		};
+	});
+
+	response = await fetch(`${url.origin}/api/dashboard/getConfirmedNotCheckedIn`);
+	let pastConfirmedBookingsNotCheckedInArray = await response.json();
+
+	pastConfirmedBookingsNotCheckedInArray = pastConfirmedBookingsNotCheckedInArray.map(
+		({ SDate, ...rest }) => {
+			return {
+				checkInDate: strftime('%e-%b-%Y', new Date(SDate)),
+				...rest
+			};
+		}
+	);
+
+	response = await fetch(`${url.origin}/api/dashboard/getGuestWithZeroDeposit`);
+	let guestWithZeroDepositArray = await response.json();
+
+	guestWithZeroDepositArray = guestWithZeroDepositArray.map(({ sDate, ...rest }) => {
+		return {
+			startDate: strftime('%e-%b-%Y', new Date(sDate)),
+			...rest
+		};
+	});
+
+	const guestWithZeroDepositObject = groupBy(guestWithZeroDepositArray, 'startDate');
+
 	return {
 		currentGuestListArray: convertBookings(currentGuestListArray),
 		todayFreeRoomsArray,
@@ -149,6 +183,9 @@ export async function load({ params, url }) {
 		earlyCheckOutObject,
 		stayRecordsToBeCreatedArray,
 		outStandingStayRecordsArray,
-		bookingsToBeConfirmedArray
+		bookingsToBeConfirmedArray,
+		autoExpiredBookingsArray,
+		pastConfirmedBookingsNotCheckedInArray,
+		guestWithZeroDepositObject
 	};
 }

@@ -1,6 +1,6 @@
 import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../mssql.config';
+import config from '../../../../../mssql.config';
 
 export async function GET() {
 	try {
