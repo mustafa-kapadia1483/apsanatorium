@@ -244,7 +244,11 @@
 				{#each Object.keys(todaysCheckInObject) as bookingStatus}
 					<EnclosedCard startText={`${bookingStatus} Booking`} class="pb-1 mb-2">
 						{#each Object.keys(todaysCheckInObject[bookingStatus]) as date}
-							<EnclosedCard startText={`Check In: ${date}`} class="pb-1 mb-2">
+							<EnclosedCard
+								startText={`Check In: ${date}`}
+								class="pb-1 mb-2"
+								highlight={isToday(date)}
+							>
 								<ol class="mt-3 mx-3 space-y-2">
 									{#each todaysCheckInObject[bookingStatus][date] as { BookingID, eJamaatID, Name, RoomID }}
 										<li class="border-b border-b-black last:border-b-0">
