@@ -3,6 +3,8 @@
 	import DashboardCard from '$lib/components/ui/dashboard/dashboard-card.svelte';
 	import EnclosedCard from '$lib/components/ui/dashboard/enclosed-card.svelte';
 	import RightArrowLi from '$lib/components/ui/dashboard/right-arrow-li.svelte';
+	import GradientHeader from '$lib/components/ui/gradient-header.svelte';
+	import GradientButton from '$lib/components/ui/gradient-button.svelte';
 	import { isToday } from '$lib/utils/date-utils.js';
 
 	export let data;
@@ -46,7 +48,9 @@
 			<RightArrowLi>Room Maintenance</RightArrowLi>
 			<RightArrowLi>Booking Cancel</RightArrowLi>
 			<RightArrowLi class="border-b border-b-gray-500 pb-1">Wait List</RightArrowLi>
-			<RightArrowLi class="border-b border-b-gray-500 pb-1">Log reports</RightArrowLi>
+			<RightArrowLi class="border-b border-b-gray-500 pb-1"
+				><a href="/dashboard/log-reports">Log reports</a></RightArrowLi
+			>
 			<RightArrowLi>Messaging</RightArrowLi>
 		</ul>
 		<div class="col-span-2 space-y-4">
@@ -89,11 +93,7 @@
 
 			<!-- Today's Free Rooms Start -->
 			<DashboardCard class="px-1 py-1 bg-blue-50">
-				<h2
-					class="text-center text-lg font-extrabold bg-gradient-to-b from-blue-700 to-blue-950 text-white py-2"
-				>
-					Today's FREE Rooms
-				</h2>
+				<GradientHeader>Today's FREE Rooms</GradientHeader>
 				<ul class="mt-2 flex gap-2 flex-wrap font-bold max-w-96">
 					{#each todayFreeRoomsArray as roomNumber}
 						<li>{roomNumber}</li>
@@ -112,12 +112,8 @@
 				<div class="mt-1 ml-1 flex items-center gap-2">
 					<label for="bookingId font-bold">Booking ID:</label>
 					<input type="text" class="rounded-md border border-blue-400" />
-					<button class="text-white bg-gradient-to-b from-blue-500 to-blue-950 py-0.5 px-2 text-xs"
-						>Go</button
-					>
-					<button class="text-white bg-gradient-to-b from-blue-500 to-blue-950 py-0.5 px-2 text-xs"
-						>View</button
-					>
+					<GradientButton>Go</GradientButton>
+					<GradientButton>View</GradientButton>
 				</div>
 				<a href="/dashboard/search-ejamaat-id" class="block text-red-900 text-xs mt-2 mb-1 ml-2"
 					>To search ejamaatID and name Click here</a
