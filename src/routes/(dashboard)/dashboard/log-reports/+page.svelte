@@ -6,12 +6,22 @@
 	import { applyAction, deserialize, enhance } from '$app/forms';
 	export let data;
 
-	const logReportArray = data.logReportArray || [];
+	const logReportArray = data.logReport || [];
+	const users = data.users || [];
 
 	onMount(() => {
 		document.getElementById('startDate').valueAsDate = new Date();
 		document.getElementById('endDate').valueAsDate = new Date();
 	});
+
+	function handleBookingIdInput(event) {
+		// Only allow alphanumeric characters and hyphen
+		const input = event.target;
+		const sanitizedValue = input.value.replace(/[^a-zA-Z0-9-]/g, '');
+		if (input.value !== sanitizedValue) {
+			input.value = sanitizedValue;
+		}
+	}
 </script>
 
 <div class="container border px-0">
@@ -21,7 +31,22 @@
 			<div class="flex justify-between">
 				<div>
 					<label for="bookingId">Booking ID:</label>
-					<input type="text" name="bookingId" id="bookingId" class="border" />
+					<input
+						type="text"
+						name="bookingId"
+						id="bookingId"
+						class="border"
+						on:input={handleBookingIdInput}
+					/>
+				</div>
+				<div>
+					<label for="user">User:</label>
+					<select name="user" id="user" class="border">
+						<option value="">Select User</option>
+						{#each users as { UserID, UserName }}
+							<option value={UserID}>{UserName}</option>
+						{/each}
+					</select>
 				</div>
 				<div>
 					<label for="keyword">Keyword:</label>
@@ -96,11 +121,16 @@
 					<DashboardCardSmallHeading>Remarks</DashboardCardSmallHeading>
 				</th>
 				<th class="border">
-					<DashboardCardSmallHeading>User</DashboardCardSmallHeading>
+					<DashboardCardSmallHeading>User ID</DashboardCardSmallHeading>
 				</th>
 			</tr>
 		</thead>
 		<tbody>
+			{#if logReportArray.length === 0}
+				<tr>
+					<td colspan="5" class="border px-2 text-center">No data found</td>
+				</tr>
+			{/if}
 			{#each logReportArray as { LogID, RoomID, BookingID, Remarks, UserID, TimeStamp }}
 				<tr class="text-xs">
 					<td class="border px-2">{TimeStamp}</td>

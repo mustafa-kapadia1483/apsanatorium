@@ -3,7 +3,8 @@ import sql from 'mssql';
 import config from '../../../../../mssql.config';
 import { strftime } from '$lib/utils/date-utils';
 
-let logReport = [];
+let logReport = null;
+let users = [];
 
 async function getLogReport(startDate, endDate, bookingId, keyword, user, origin) {
 	try {
@@ -30,9 +31,7 @@ async function getLogReport(startDate, endDate, bookingId, keyword, user, origin
 			};
 		});
 
-		return {
-			logReportArray
-		};
+		return logReportArray;
 
 	} catch (err) {
 		return {
@@ -104,12 +103,16 @@ export async function load({ url, actionData }) {
 	const keyword = url.searchParams.get('keyword');
 	const user = url.searchParams.get('user');
 
-	if (logReport.length == 0) {
-		logReport = await getLogReport(startDate, endDate, bookingId, keyword, user, url.origin);
+	if (!logReport) {
+		[logReport, users] = await Promise.all([
+			getLogReport(startDate, endDate, bookingId, keyword, user, url.origin),
+			fetch(url.origin + '/api/common/getUsers').then(response => response.json())
+		]);
 	}
 
 	return {
-		...logReport
+		logReport,
+		users
 	};
 }
 
