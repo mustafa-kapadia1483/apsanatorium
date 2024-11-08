@@ -1,10 +1,5 @@
-import { error, redirect } from '@sveltejs/kit';
-import sql from 'mssql';
-import config from '../../../../../mssql.config';
+import { redirect } from '@sveltejs/kit';
 import { strftime } from '$lib/utils/date-utils';
-
-let logReport = null;
-let users = [];
 
 async function getLogReport(startDate, endDate, bookingId, keyword, user, origin) {
 	try {
@@ -42,20 +37,27 @@ async function getLogReport(startDate, endDate, bookingId, keyword, user, origin
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url, actionData }) {
-	let startDate = url.searchParams.get('startDate') ?? new Date(strftime('%F'));
-	let endDate = url.searchParams.get('endDate') ?? new Date(strftime('%F'));
+	let startDate = url.searchParams.get('startDate') ?? new Date();
+	let endDate = url.searchParams.get('endDate') ?? new Date();
 	const bookingId = url.searchParams.get('bookingId');
 	const keyword = url.searchParams.get('keyword');
 	const user = url.searchParams.get('user');
 
-	[logReport, users] = await Promise.all([
+	const [logReport, users] = await Promise.all([
 		getLogReport(startDate, endDate, bookingId, keyword, user, url.origin),
 		fetch(url.origin + '/api/common/getUsers').then(response => response.json())
 	]);
 
+	console.log({ startDate, endDate, bookingId, keyword, user });
+
 	return {
 		logReport,
-		users
+		users,
+		startDate,
+		endDate,
+		bookingId,
+		keyword,
+		selectedUser: user
 	};
 }
 

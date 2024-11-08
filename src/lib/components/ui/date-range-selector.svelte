@@ -1,18 +1,12 @@
 <script>
-	import { onMount } from 'svelte';
-	onMount(() => {
-		document.getElementById('startDate').valueAsDate = new Date();
-		document.getElementById('endDate').valueAsDate = new Date();
-	});
-
 	function getDateRange(type) {
 		const today = new Date();
 		let startDate, endDate;
 
 		switch (type) {
 			case 'today':
-				startDate = today;
-				endDate = today;
+				startDate = new Date(today);
+				endDate = new Date(today);
 				break;
 			case 'this-month':
 				startDate = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -55,6 +49,9 @@
 				throw new Error('Invalid type provided.');
 		}
 
+		startDate.setHours(0, 0, 0, 0);
+		endDate.setHours(23, 59, 59, 999);
+
 		return {
 			startDate,
 			endDate
@@ -65,19 +62,21 @@
 		const timeframe = event.target.value;
 		const dateRange = getDateRange(timeframe);
 		console.log(timeframe, dateRange);
-		document.getElementById('startDate').valueAsDate = dateRange.startDate;
-		document.getElementById('endDate').valueAsDate = dateRange.endDate;
+		document.getElementById('startDate').value =
+			`${dateRange.startDate.getFullYear()}-${String(dateRange.startDate.getMonth() + 1).padStart(2, '0')}-${String(dateRange.startDate.getDate()).padStart(2, '0')}T${String(dateRange.startDate.getHours()).padStart(2, '0')}:${String(dateRange.startDate.getMinutes()).padStart(2, '0')}`;
+		document.getElementById('endDate').value =
+			`${dateRange.endDate.getFullYear()}-${String(dateRange.endDate.getMonth() + 1).padStart(2, '0')}-${String(dateRange.endDate.getDate()).padStart(2, '0')}T${String(dateRange.endDate.getHours()).padStart(2, '0')}:${String(dateRange.endDate.getMinutes()).padStart(2, '0')}`;
 	}
 </script>
 
 <div class="flex gap-5">
 	<div>
 		<label for="startDate">Date From:</label>
-		<input class="border" type="date" name="startDate" id="startDate" />
+		<input class="border" type="datetime-local" name="startDate" id="startDate" />
 	</div>
 	<div>
 		<label for="endDate">Date To:</label>
-		<input class="border" type="date" name="endDate" id="endDate" />
+		<input class="border" type="datetime-local" name="endDate" id="endDate" />
 	</div>
 	<div class="flex gap-2 text-xs">
 		<div class="flex items-center gap-1">

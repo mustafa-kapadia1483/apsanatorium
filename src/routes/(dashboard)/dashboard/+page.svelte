@@ -43,7 +43,7 @@
 			<RightArrowLi>Billing</RightArrowLi>
 			<RightArrowLi class="border-b border-b-gray-500 pb-1">Payment</RightArrowLi>
 			<RightArrowLi class="border-b border-b-gray-500 pb-1">Exit Scan</RightArrowLi>
-			<RightArrowLi>Reports</RightArrowLi>
+			<RightArrowLi><a href="/dashboard/reports">Reports</a></RightArrowLi>
 			<RightArrowLi>Masters</RightArrowLi>
 			<RightArrowLi>Room Maintenance</RightArrowLi>
 			<RightArrowLi>Booking Cancel</RightArrowLi>
