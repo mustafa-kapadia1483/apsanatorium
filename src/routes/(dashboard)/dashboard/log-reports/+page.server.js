@@ -5,48 +5,25 @@ import { strftime } from '$lib/utils/date-utils';
 
 let logReport = [];
 
-async function getLogReport(startDate, endDate, bookingId, keyword, user) {
+async function getLogReport(startDate, endDate, bookingId, keyword, user, origin) {
 	try {
-		let cond = '';
-		let joiner = ' WHERE ';
+		const url = new URL('/api/log-report', origin);
+		
+		// Add query parameters if they exist
+		if (startDate) url.searchParams.set('startDate', startDate);
+		if (endDate) url.searchParams.set('endDate', endDate);
+		if (bookingId) url.searchParams.set('bookingId', bookingId);
+		if (keyword) url.searchParams.set('keyword', keyword);
+		if (user) url.searchParams.set('user', user);
 
-		// Helper function to append condition
-		function appendCondition(condition) {
-			if (condition) {
-				cond += joiner + condition;
-				joiner = ' AND '; // Update joiner after the first condition is added
-			}
+		const response = await fetch(url);
+		const result = await response.json();
+
+		if (!Array.isArray(result)) {
+			throw new Error('Invalid response from server');
 		}
 
-		// Add conditions based on user inputs
-		appendCondition(bookingId && `BookingID='${bookingId}'`);
-		appendCondition(keyword && `remarks LIKE '%${keyword}%'`);
-		appendCondition(user && `UserID='${user}'`);
-
-		let pool = await sql.connect(config);
-
-		let request = pool.request();
-
-		if (startDate && endDate) {
-			appendCondition(
-				`CONVERT(datetime, CONVERT(varchar(10), DATEADD(day, 0, TimeStamp), 112)) BETWEEN @startDate AND @endDate`
-			);
-			request.input('startDate', sql.DateTime, new Date(startDate));
-			request.input('endDate', sql.DateTime, new Date(endDate));
-		} else if (!bookingId && !keyword) {
-			const pastYearDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
-			const currentDate = new Date();
-			appendCondition(
-				`CONVERT(datetime, CONVERT(varchar(10), DATEADD(day, 0, TimeStamp), 112)) BETWEEN @pastYearDate AND @currentDate`
-			);
-			request.input('pastYearDate', sql.DateTime, pastYearDate);
-			request.input('currentDate', sql.DateTime, currentDate);
-		}
-
-		const query = `SELECT * FROM log ${cond} ORDER BY TimeStamp DESC, BookingID, RoomID`;
-		const result = await request.query(query);
-
-		const logReportArray = result.recordset.map(({ TimeStamp, ...rest }) => {
+		const logReportArray = result.map(({ TimeStamp, ...rest }) => {
 			return {
 				TimeStamp: strftime('%d-%b-%Y %I:%M %p', new Date(TimeStamp)),
 				...rest
@@ -56,6 +33,7 @@ async function getLogReport(startDate, endDate, bookingId, keyword, user) {
 		return {
 			logReportArray
 		};
+
 	} catch (err) {
 		return {
 			error: err.message
@@ -127,7 +105,7 @@ export async function load({ url, actionData }) {
 	const user = url.searchParams.get('user');
 
 	if (logReport.length == 0) {
-		logReport = await getLogReport(startDate, endDate, bookingId, keyword, user);
+		logReport = await getLogReport(startDate, endDate, bookingId, keyword, user, url.origin);
 	}
 
 	return {
@@ -137,7 +115,7 @@ export async function load({ url, actionData }) {
 
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
-	default: async ({ request }) => {
+	default: async ({ request, url }) => {
 		const formData = await request.formData();
 		let startDate = formData.get('startDate');
 		let endDate = formData.get('endDate');
@@ -153,7 +131,7 @@ export const actions = {
 			endDate = dateRange.endDate;
 		}
 
-		logReport = await getLogReport(startDate, endDate, bookingId, keyword, user);
+		logReport = await getLogReport(startDate, endDate, bookingId, keyword, user, url.origin);
 
 		return {
 			data: undefined
