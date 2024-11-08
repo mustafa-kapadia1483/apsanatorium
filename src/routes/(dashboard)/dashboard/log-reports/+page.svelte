@@ -2,17 +2,12 @@
 	import GradientHeader from '$lib/components/ui/gradient-header.svelte';
 	import DashboardCardSmallHeading from '$lib/components/ui/dashboard/dashboard-card-small-heading.svelte';
 	import GradientButton from '$lib/components/ui/gradient-button.svelte';
-	import { onMount } from 'svelte';
+	import DateRangeSelector from '$lib/components/date-range-selector.svelte';
 	import { applyAction, deserialize, enhance } from '$app/forms';
 	export let data;
 
 	const logReportArray = data.logReport || [];
 	const users = data.users || [];
-
-	onMount(() => {
-		document.getElementById('startDate').valueAsDate = new Date();
-		document.getElementById('endDate').valueAsDate = new Date();
-	});
 
 	function handleBookingIdInput(event) {
 		// Only allow alphanumeric characters and hyphen
@@ -53,52 +48,7 @@
 					<input type="text" name="keyword" id="keyword" class="border" />
 				</div>
 			</div>
-			<div class="flex gap-5">
-				<div>
-					<label for="startDate">Date From:</label>
-					<input class="border" type="date" name="startDate" id="startDate" />
-				</div>
-				<div>
-					<label for="endDate">Date To:</label>
-					<input class="border" type="date" name="endDate" id="endDate" />
-				</div>
-				<div class="flex gap-2 text-xs">
-					<div class="flex items-center gap-1">
-						<input type="radio" value="today" name="timeframe" id="today" />
-						<label for="today">Today</label>
-					</div>
-					<div class="flex items-center gap-1">
-						<input type="radio" value="this-month" name="timeframe" id="this-month" />
-						<label for="this-month">This Month</label>
-					</div>
-					<div class="flex items-center gap-1">
-						<input type="radio" value="last-month" name="timeframe" id="last-month" />
-						<label for="last-month">Last Month</label>
-					</div>
-					<div class="flex items-center gap-1">
-						<input type="radio" value="last-30-days" name="timeframe" id="last-30-days" />
-						<label for="last-30-days">Last 30 Days</label>
-					</div>
-					<div class="flex items-center gap-1">
-						<input
-							type="radio"
-							value="this-financial-year"
-							name="timeframe"
-							id="this-financial-year"
-						/>
-						<label for="this-financial-year">This financial year</label>
-					</div>
-					<div class="flex items-center gap-1">
-						<input
-							type="radio"
-							value="last-financial-year"
-							name="timeframe"
-							id="last-financial-year"
-						/>
-						<label for="last-financial-year">Last financial year</label>
-					</div>
-				</div>
-			</div>
+			<DateRangeSelector />
 			<div class="space-x-2">
 				<GradientButton type="submit">Search</GradientButton>
 				<GradientButton>Export to Excel</GradientButton>
