@@ -67,7 +67,7 @@
 	}
 </script>
 
-<div class="flex gap-5">
+<div class={`flex gap-5 ${$$props.class}`}>
 	<div>
 		<label for="startDate">Date From:</label>
 		<input class="border" type="date" name="startDate" id="startDate" bind:value={startDate} />
