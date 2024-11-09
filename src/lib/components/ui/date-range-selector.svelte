@@ -1,7 +1,10 @@
 <script>
+	import { strftime } from '$lib/utils/date-utils';
+	export let startDate;
+	export let endDate;
+
 	function getDateRange(type) {
 		const today = new Date();
-		let startDate, endDate;
 
 		switch (type) {
 			case 'today':
@@ -22,7 +25,7 @@
 				startDate = new Date(
 					today.getMonth() >= 3 ? today.getFullYear() : today.getFullYear() - 1,
 					3,
-					2
+					1
 				); // Financial year starts in April
 				endDate = today; // Until today's date
 				break;
@@ -31,12 +34,12 @@
 				startDate = new Date(
 					today.getMonth() >= 3 ? today.getFullYear() - 1 : today.getFullYear() - 2,
 					3,
-					2
+					1
 				);
 				endDate = new Date(
 					today.getMonth() >= 3 ? today.getFullYear() : today.getFullYear() - 1,
 					2,
-					32
+					31
 				); // End of March for the last financial year
 				break;
 			case 'last-30-days':
@@ -49,9 +52,6 @@
 				throw new Error('Invalid type provided.');
 		}
 
-		startDate.setHours(0, 0, 0, 0);
-		endDate.setHours(23, 59, 59, 999);
-
 		return {
 			startDate,
 			endDate
@@ -61,22 +61,20 @@
 	function handleRadioChange(event) {
 		const timeframe = event.target.value;
 		const dateRange = getDateRange(timeframe);
-		console.log(timeframe, dateRange);
-		document.getElementById('startDate').value =
-			`${dateRange.startDate.getFullYear()}-${String(dateRange.startDate.getMonth() + 1).padStart(2, '0')}-${String(dateRange.startDate.getDate()).padStart(2, '0')}T${String(dateRange.startDate.getHours()).padStart(2, '0')}:${String(dateRange.startDate.getMinutes()).padStart(2, '0')}`;
-		document.getElementById('endDate').value =
-			`${dateRange.endDate.getFullYear()}-${String(dateRange.endDate.getMonth() + 1).padStart(2, '0')}-${String(dateRange.endDate.getDate()).padStart(2, '0')}T${String(dateRange.endDate.getHours()).padStart(2, '0')}:${String(dateRange.endDate.getMinutes()).padStart(2, '0')}`;
+
+		startDate = strftime('%F', dateRange.startDate);
+		endDate = strftime('%F', dateRange.endDate);
 	}
 </script>
 
 <div class="flex gap-5">
 	<div>
 		<label for="startDate">Date From:</label>
-		<input class="border" type="datetime-local" name="startDate" id="startDate" />
+		<input class="border" type="date" name="startDate" id="startDate" bind:value={startDate} />
 	</div>
 	<div>
 		<label for="endDate">Date To:</label>
-		<input class="border" type="datetime-local" name="endDate" id="endDate" />
+		<input class="border" type="date" name="endDate" id="endDate" bind:value={endDate} />
 	</div>
 	<div class="flex gap-2 text-xs">
 		<div class="flex items-center gap-1">

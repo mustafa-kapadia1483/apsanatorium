@@ -37,8 +37,8 @@ async function getLogReport(startDate, endDate, bookingId, keyword, user, origin
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url, actionData }) {
-	let startDate = url.searchParams.get('startDate') ?? new Date();
-	let endDate = url.searchParams.get('endDate') ?? new Date();
+	let startDate = url.searchParams.get('startDate') ?? strftime('%F');
+	let endDate = url.searchParams.get('endDate') ?? strftime('%F');
 	const bookingId = url.searchParams.get('bookingId');
 	const keyword = url.searchParams.get('keyword');
 	const user = url.searchParams.get('user');

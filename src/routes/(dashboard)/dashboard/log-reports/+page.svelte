@@ -8,6 +8,8 @@
 	const logReportArray = data.logReport || [];
 	const users = data.users || [];
 
+	let { startDate, endDate, selectedUser, bookingId, keyword } = data;
+
 	function handleBookingIdInput(event) {
 		// Only allow alphanumeric characters and hyphen
 		const input = event.target;
@@ -30,12 +32,13 @@
 						name="bookingId"
 						id="bookingId"
 						class="border"
+						bind:value={bookingId}
 						on:input={handleBookingIdInput}
 					/>
 				</div>
 				<div>
 					<label for="user">User:</label>
-					<select name="user" id="user" class="border">
+					<select name="user" id="user" class="border" bind:value={selectedUser}>
 						<option value="">Select User</option>
 						{#each users as { UserID, UserName }}
 							<option value={UserID}>{UserName}</option>
@@ -44,10 +47,10 @@
 				</div>
 				<div>
 					<label for="keyword">Keyword:</label>
-					<input type="text" name="keyword" id="keyword" class="border" />
+					<input type="text" name="keyword" id="keyword" class="border" bind:value={keyword} />
 				</div>
 			</div>
-			<DateRangeSelector />
+			<DateRangeSelector {startDate} {endDate} />
 			<div class="space-x-2">
 				<GradientButton type="submit">Search</GradientButton>
 				<GradientButton>Export to Excel</GradientButton>

@@ -4,8 +4,8 @@ import config from '../../../../mssql.config';
 import { strftime } from '$lib/utils/date-utils';
 
 export async function GET({ url }) {
-	const startDate = url.searchParams.get('startDate') ?? new Date(strftime('%F'));
-	const endDate = url.searchParams.get('endDate') ?? new Date(strftime('%F'));
+	const startDate = url.searchParams.get('startDate') ?? strftime('%F');
+	const endDate = url.searchParams.get('endDate') ?? strftime('%F');
 	const bookingId = url.searchParams.get('bookingId');
 	const keyword = url.searchParams.get('keyword');
 	const user = url.searchParams.get('user');
@@ -35,21 +35,21 @@ export async function GET({ url }) {
 			appendCondition(
 				`CONVERT(datetime, CONVERT(varchar(10), DATEADD(day, 0, TimeStamp), 112)) BETWEEN @startDate AND @endDate`
 			);
-			request.input('startDate', sql.DateTime, new Date(startDate));
-			request.input('endDate', sql.DateTime, new Date(endDate));
+			request.input('startDate', sql.Date, startDate);
+			request.input('endDate', sql.Date, endDate);
 		} else if (!bookingId && !keyword) {
 			const pastYearDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
 			const currentDate = new Date();
 			appendCondition(
 				`CONVERT(datetime, CONVERT(varchar(10), DATEADD(day, 0, TimeStamp), 112)) BETWEEN @pastYearDate AND @currentDate`
 			);
-			request.input('pastYearDate', sql.DateTime, pastYearDate);
-			request.input('currentDate', sql.DateTime, currentDate);
+			request.input('pastYearDate', sql.Date, pastYearDate);
+			request.input('currentDate', sql.Date, currentDate);
 		}
 
 		let query = `SELECT * FROM log ${cond} ORDER BY TimeStamp DESC, BookingID, RoomID`;
-		console.log(query);
 		let result = await request.query(query);
+
 
 		return json(result.recordset);
 	} catch (err) {
