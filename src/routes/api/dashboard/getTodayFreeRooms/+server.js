@@ -9,7 +9,7 @@ async function getFRID(roomTypeID, fromDate, numDays, pool) {
 
 		// Add input parameters
 		request.input('RoomTypeID', sql.BigInt, roomTypeID);
-		request.input('FromDate', sql.DateTime, fromDate);
+		request.input('FromDate', sql.Date, fromDate);
 		request.input('NumDays', sql.Int, numDays);
 
 		// Add output parameter

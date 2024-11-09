@@ -4,36 +4,56 @@ import config from '../../../../../mssql.config';
 
 export async function GET() {
 	try {
-		let pool = await sql.connect(config);
-		let request = pool.request();
+		const pool = await sql.connect(config);
+		const request = pool.request();
 
-		let fetchDate = new Date();
-		fetchDate.setDate(fetchDate.getDate() - 1);
+		const queries = []
+		for (let i = -1; i < 8; i++) {
+			const dateName = `date_${i >= 0 ? i : 'm' + Math.abs(i)}`;
+			let fetchDate = new Date();
+			fetchDate.setDate(fetchDate.getDate() + i);
 
-		let query = '';
-		for (let i = 1; i <= 9; i++) {
-			let dateName = `date_${i}`;
-			if (query.length > 0) query += ' Union';
-			query += ` Select cast(@${dateName} as DateTime) as TheDay, 
-			(select count(rbid) as cnt from RoomBooking inner join Rooms  on RoomBooking.RoomID=Rooms.RoomID Where IsActive='Y' and @${dateName} between StartDate and EndDate And Status = 'Booked') as Booked, 
-			(select count(rbid) as cnt from RoomBooking inner join Rooms  on RoomBooking.RoomID=Rooms.RoomID Where IsActive='Y' and @${dateName} between StartDate and EndDate And Status in ('CheckedIn','CheckedOut') and  RoomIsFree='N') as Occupied, 
-			(select count(rbid) as cnt from RoomBooking inner join Rooms  on RoomBooking.RoomID=Rooms.RoomID Where IsActive='Y' and @${dateName} between StartDate and EndDate And Status = 'Blocked') as Blocked
-			`;
+			queries.push(`
+          SELECT 
+            CAST(@${dateName} AS DATETIME) as TheDay,
+            (SELECT COUNT(rb.RBID) 
+             FROM RoomBooking rb
+             INNER JOIN Rooms r ON rb.RoomID = r.RoomID 
+             WHERE r.IsActive = 'Y' 
+             AND @${dateName} BETWEEN rb.StartDate AND rb.EndDate 
+             AND rb.Status = 'Booked') as Booked,
+            
+            (SELECT COUNT(rb.RBID)
+             FROM RoomBooking rb 
+             INNER JOIN Rooms r ON rb.RoomID = r.RoomID
+             WHERE r.IsActive = 'Y'
+             AND @${dateName} BETWEEN rb.StartDate AND rb.EndDate
+             AND rb.Status IN ('CheckedIn','CheckedOut')
+             AND rb.RoomIsFree = 'N') as Occupied,
+             
+            (SELECT COUNT(rb.RBID)
+             FROM RoomBooking rb
+             INNER JOIN Rooms r ON rb.RoomID = r.RoomID
+             WHERE r.IsActive = 'Y'
+             AND @${dateName} BETWEEN rb.StartDate AND rb.EndDate
+             AND rb.Status = 'Blocked') as Blocked
+        `)
 
-			request.input(dateName, sql.DateTime, new Date(fetchDate));
-			fetchDate.setDate(fetchDate.getDate() + 1);
+			request.input(dateName, sql.Date, fetchDate);
 		}
 
-		query += ' Order by TheDay';
+
+		const roomStatusQuery = queries.join(' UNION ') + ' ORDER BY TheDay'
+		const totalRoomsQuery = `Select count(RoomID) as cnt from Rooms Where IsActive = 'Y'`;
 
 		// Get Waitlist Repot from stored procedure
-		let result = await request.query(query);
-		let roomStatusArray = result.recordset;
+		const [roomStatusResult, totalRoomsResult] = await Promise.all([
+			request.query(roomStatusQuery),
+			request.query(totalRoomsQuery)
+		]);
 
-		query = `Select count(RoomID) as cnt from Rooms Where IsActive = 'Y'`;
-		result = await request.query(query);
-
-		let totalRoomsCount = result.recordset[0].cnt;
+		const roomStatusArray = roomStatusResult.recordset;
+		const totalRoomsCount = totalRoomsResult.recordset[0].cnt;
 
 		return json({ roomStatusArray, totalRoomsCount });
 	} catch (err) {

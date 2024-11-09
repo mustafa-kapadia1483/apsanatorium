@@ -19,8 +19,8 @@ export async function GET() {
          Left Outer join Booking B on B.BookingID=RB.BookingID left Outer join EJamaatMaster EM on EM.EJamaatID=B.EJamaatID 
          Where RB.Package='Saifee' and RB.StartDate Between @date2DaysAgo and @date2DaysInFuture and RB.Status in  ('Booked','Checked') and RB.RoomISFree='N' and RB.ParentRoomID = 0`;
 
-		request.input('date2DaysAgo', sql.DateTime, date2DaysAgo);
-		request.input('date2DaysInFuture', sql.DateTime, date2DaysInFuture);
+		request.input('date2DaysAgo', sql.Date, date2DaysAgo);
+		request.input('date2DaysInFuture', sql.Date, date2DaysInFuture);
 
 		let result = await request.query(query);
 

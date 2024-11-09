@@ -77,13 +77,15 @@
 					</thead>
 					<tbody>
 						{#each roomStatusArray as { date, day, booked, occupied, blocked, available, isToday }}
-							<tr class="bg-gray-50 hover:bg-gray-500 hover:text-white">
+							<tr
+								class={`bg-gray-50 hover:bg-gray-500 hover:text-white ${isToday ? 'bg-highlight' : ''}`}
+							>
 								<td class="border border-gray-400 pl-2 pr-3">{date}</td>
 								<td class="border border-gray-400 pl-2 pr-3">{day}</td>
 								<td class="border border-gray-400 pl-2 pr-3 text-center">{booked}</td>
 								<td class="border border-gray-400 pl-2 pr-3 text-center">{occupied}</td>
 								<td class="border border-gray-400 pl-2 pr-3 text-center">{blocked}</td>
-								<td class="border border-gray-400 pl-2 pr-3 text-center">{available}</td>
+								<td class="border border-gray-400 pl-2 pr-3 text-center font-bold">{available}</td>
 							</tr>
 						{/each}
 					</tbody>
@@ -217,7 +219,7 @@
 					<p class="text-center font-bold">No Saifee Rooms for Today</p>
 				{/if}
 				{#each saifeeRoomList as { BookingID, eJamaatID, Name, date, RoomID }}
-					<EnclosedCard startText={`Date: ${date}`} class="pb-1 mb-2">
+					<EnclosedCard startText={`Date: ${date}`} class="pb-1 mb-2" highlight={isToday(date)}>
 						<ol class="mt-3 mx-3 space-y-2">
 							<li class="border-b border-b-black last:border-b-0">
 								<div>

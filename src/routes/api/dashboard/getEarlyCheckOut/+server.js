@@ -3,16 +3,16 @@ import { json } from '@sveltejs/kit';
 import config from '../../../../../mssql.config';
 
 export async function GET() {
-	try {
-		let pool = await sql.connect(config);
+    try {
+        let pool = await sql.connect(config);
 
-		let currentDate = new Date();
-		currentDate.setHours(0, 0, 0, 0);
+        let currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
 
-		let dateAfter3Days = new Date();
-		dateAfter3Days.setDate(dateAfter3Days.getDate() + 3);
+        let dateAfter3Days = new Date();
+        dateAfter3Days.setDate(dateAfter3Days.getDate() + 3);
 
-		let query = `
+        let query = `
             SELECT 
                 B.BookingID, 
                 MainRBID as RBID, 
@@ -63,17 +63,17 @@ export async function GET() {
             ORDER BY eDate, RoomID DESC;
         `;
 
-		let request = pool.request();
-		request.input('currentDate', sql.DateTime, currentDate);
-		request.input('dateAfter3Days', sql.DateTime, dateAfter3Days);
+        let request = pool.request();
+        request.input('currentDate', sql.DateTime, currentDate);
+        request.input('dateAfter3Days', sql.DateTime, dateAfter3Days);
 
-		let result = await request.query(query);
+        let result = await request.query(query);
 
-		return json(result.recordset);
-	} catch (err) {
-		console.log(err);
-		return json({
-			error: err
-		});
-	}
+        return json(result.recordset);
+    } catch (err) {
+        console.log(err);
+        return json({
+            error: err
+        });
+    }
 }

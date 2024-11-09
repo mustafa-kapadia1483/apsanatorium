@@ -24,7 +24,7 @@ export async function GET() {
 
 		let result = await pool
 			.request()
-			.input('currentDate', sql.DateTime, currentDate) // Pass the current date as a DateTime parameter
+			.input('currentDate', sql.Date, currentDate) // Pass the current date as a DateTime parameter
 			.query(query);
 
 		return json(result.recordset);
