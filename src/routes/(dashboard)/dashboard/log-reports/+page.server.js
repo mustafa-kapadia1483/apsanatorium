@@ -39,9 +39,9 @@ async function getLogReport(startDate, endDate, bookingId, keyword, user, origin
 export async function load({ url, actionData }) {
 	let startDate = url.searchParams.get('startDate') ?? strftime('%F');
 	let endDate = url.searchParams.get('endDate') ?? strftime('%F');
-	const bookingId = url.searchParams.get('bookingId');
-	const keyword = url.searchParams.get('keyword');
-	const user = url.searchParams.get('user');
+	const bookingId = url.searchParams.get('bookingId') ?? '';
+	const keyword = url.searchParams.get('keyword') ?? '';
+	const user = url.searchParams.get('user') ?? '';
 
 	const [logReport, users] = await Promise.all([
 		getLogReport(startDate, endDate, bookingId, keyword, user, url.origin),
