@@ -1,13 +1,10 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../../mssql.config';
+import { executeStoredProcedure } from '$lib/server/database';
 
 export async function GET() {
 	try {
-		let pool = await sql.connect(config);
-
-		// Get Waitlist Repot from stored procedure
-		let result = await pool.request().execute('WaitListReport');
+		// Get Waitlist Report from stored procedure
+		const result = await executeStoredProcedure('WaitListReport');
 
 		return json(result.recordset[0]);
 	} catch (err) {

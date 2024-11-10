@@ -1,12 +1,9 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../../mssql.config';
+import { executeQuery } from '$lib/server/database';
 
 export async function GET() {
-	try {
-		let pool = await sql.connect(config);
-
-		let query = `
+    try {
+        const query = `
             SELECT 
                 T.*, 
                 (T.FinalTotal - T.Paid + T.CDPaid) AS Balance, 
@@ -32,14 +29,13 @@ export async function GET() {
             WHERE (T.FinalTotal - T.Paid + CDPaid) <> 0;
         `;
 
-		let request = pool.request();
-		let result = await request.query(query);
+        const result = await executeQuery(query);
 
-		return json(result.recordset);
-	} catch (err) {
-		console.log(err);
-		return json({
-			error: err
-		});
-	}
+        return json(result);
+    } catch (err) {
+        console.log(err);
+        return json({
+            error: err
+        });
+    }
 }

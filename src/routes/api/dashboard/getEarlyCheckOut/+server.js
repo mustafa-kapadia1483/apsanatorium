@@ -1,18 +1,16 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../../mssql.config';
+import { executeQuery } from '$lib/server/database';
+import sql from 'mssql';
 
 export async function GET() {
     try {
-        let pool = await sql.connect(config);
-
         let currentDate = new Date();
         currentDate.setHours(0, 0, 0, 0);
 
         let dateAfter3Days = new Date();
         dateAfter3Days.setDate(dateAfter3Days.getDate() + 3);
 
-        let query = `
+        const query = `
             SELECT 
                 B.BookingID, 
                 MainRBID as RBID, 
@@ -63,13 +61,14 @@ export async function GET() {
             ORDER BY eDate, RoomID DESC;
         `;
 
-        let request = pool.request();
-        request.input('currentDate', sql.DateTime, currentDate);
-        request.input('dateAfter3Days', sql.DateTime, dateAfter3Days);
+        const params = {
+            currentDate: { type: sql.Date, value: currentDate },
+            dateAfter3Days: { type: sql.Date, value: dateAfter3Days }
+        };
 
-        let result = await request.query(query);
+        const result = await executeQuery(query, params);
 
-        return json(result.recordset);
+        return json(result);
     } catch (err) {
         console.log(err);
         return json({

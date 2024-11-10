@@ -1,13 +1,12 @@
 import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../../mssql.config';
+import { executeQuery } from '$lib/server/database';
 
 export async function GET() {
 	try {
-		const pool = await sql.connect(config);
-		const request = pool.request();
+		const queries = [];
+		const params = {};
 
-		const queries = []
 		for (let i = -1; i < 8; i++) {
 			const dateName = `date_${i >= 0 ? i : 'm' + Math.abs(i)}`;
 			let fetchDate = new Date();
@@ -37,23 +36,21 @@ export async function GET() {
              WHERE r.IsActive = 'Y'
              AND @${dateName} BETWEEN rb.StartDate AND rb.EndDate
              AND rb.Status = 'Blocked') as Blocked
-        `)
+        `);
 
-			request.input(dateName, sql.Date, fetchDate);
+			params[dateName] = { type: sql.Date, value: fetchDate };
 		}
 
-
-		const roomStatusQuery = queries.join(' UNION ') + ' ORDER BY TheDay'
+		const roomStatusQuery = queries.join(' UNION ') + ' ORDER BY TheDay';
 		const totalRoomsQuery = `Select count(RoomID) as cnt from Rooms Where IsActive = 'Y'`;
 
-		// Get Waitlist Repot from stored procedure
 		const [roomStatusResult, totalRoomsResult] = await Promise.all([
-			request.query(roomStatusQuery),
-			request.query(totalRoomsQuery)
+			executeQuery(roomStatusQuery, params),
+			executeQuery(totalRoomsQuery)
 		]);
 
-		const roomStatusArray = roomStatusResult.recordset;
-		const totalRoomsCount = totalRoomsResult.recordset[0].cnt;
+		const roomStatusArray = roomStatusResult;
+		const totalRoomsCount = totalRoomsResult[0].cnt;
 
 		return json({ roomStatusArray, totalRoomsCount });
 	} catch (err) {

@@ -1,33 +1,43 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../../mssql.config';
-
-function formatDateToSQL(date) {
-	const padZero = (num) => (num < 10 ? '0' + num : num);
-	const year = date.getFullYear();
-	const month = padZero(date.getMonth() + 1); // Months are 0-indexed
-	const day = padZero(date.getDate());
-	return `${year}-${month}-${day}`;
-}
+import { executeQuery } from '$lib/server/database';
+import sql from 'mssql';
 
 export async function GET() {
 	const currentDate = new Date();
 
 	try {
-		let pool = await sql.connect(config);
-		// Format current date to SQL format
-		let query =
-			'SELECT vbg.RBID,vbg.BGName,vbg.ejamaatId,vbg.RoomID, vbg.BookingID,vrd.StartDate,DATEADD(Day,1,vrd.EndDate) AS EndDate FROM vwBookingGuest vbg,vwRoomDetails vrd' +
-			' WHERE @currentDate between vrd.startdate AND DATEADD(day, 0, vrd.EndDate)  ' +
-			" AND vrd.Status in('CheckedIn','CheckedOut','Extra') and vrd.RoomIsFree='N' and  vbg.RBID=vrd.RBID AND vbg.BookingID=vrd.BookingID AND " +
-			" vbg.BookingID in (SELECT vrd.BookingID FROM vwRoomDetails vrd WHERE @currentDate between vrd.startdate AND DATEADD(day, 0, vrd.EndDate) AND vrd.Status in ('CheckedIn','CheckedOut','Extra') and vrd.RoomIsFree='N' group by vrd.BookingID ) order by vbg.RoomID desc, vbg.Gender Desc";
+		const query = `
+			SELECT 
+				vbg.RBID,
+				vbg.BGName,
+				vbg.ejamaatId,
+				vbg.RoomID, 
+				vbg.BookingID,
+				vrd.StartDate,
+				DATEADD(Day,1,vrd.EndDate) AS EndDate 
+			FROM vwBookingGuest vbg,vwRoomDetails vrd
+			WHERE @currentDate between vrd.startdate AND DATEADD(day, 0, vrd.EndDate)
+			AND vrd.Status in('CheckedIn','CheckedOut','Extra') 
+			AND vrd.RoomIsFree='N' 
+			AND vbg.RBID=vrd.RBID 
+			AND vbg.BookingID=vrd.BookingID 
+			AND vbg.BookingID in (
+				SELECT vrd.BookingID 
+				FROM vwRoomDetails vrd 
+				WHERE @currentDate between vrd.startdate AND DATEADD(day, 0, vrd.EndDate) 
+				AND vrd.Status in ('CheckedIn','CheckedOut','Extra') 
+				AND vrd.RoomIsFree='N' 
+				GROUP BY vrd.BookingID
+			) 
+			ORDER BY vbg.RoomID desc, vbg.Gender Desc`;
 
-		let result = await pool
-			.request()
-			.input('currentDate', sql.Date, currentDate) // Pass the current date as a DateTime parameter
-			.query(query);
+		const params = {
+			currentDate: { type: sql.Date, value: currentDate }
+		};
 
-		return json(result.recordset);
+		const result = await executeQuery(query, params);
+
+		return json(result);
 	} catch (err) {
 		console.log(err);
 		return json({

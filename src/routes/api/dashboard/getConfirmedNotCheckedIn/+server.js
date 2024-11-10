@@ -1,14 +1,12 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../../mssql.config';
+import { executeQuery } from '$lib/server/database';
+import sql from 'mssql';
 
 export async function GET() {
 	try {
-		let pool = await sql.connect(config);
-
 		let currentDate = new Date();
 
-		let query = `
+		const query = `
 				SELECT BookingID, eJamaatID,
 					ISNULL(
 						(SELECT EM.FullName FROM EJamaatMaster EM WHERE EM.EJamaatID = B.EJamaatID), ''
@@ -26,11 +24,13 @@ export async function GET() {
 				ORDER BY SDate;
 		`;
 
-		let request = pool.request();
-		request.input('currentDate', sql.DateTime, currentDate);
-		let result = await request.query(query);
+		const params = {
+			currentDate: { type: sql.DateTime, value: currentDate }
+		};
 
-		return json(result.recordset);
+		const result = await executeQuery(query, params);
+
+		return json(result);
 	} catch (err) {
 		console.log(err);
 		return json({
