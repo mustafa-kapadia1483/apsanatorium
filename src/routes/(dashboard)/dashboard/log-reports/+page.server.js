@@ -48,8 +48,6 @@ export async function load({ url, actionData }) {
 		fetch(url.origin + '/api/common/getUsers').then(response => response.json())
 	]);
 
-	console.log({ startDate, endDate, bookingId, keyword, user });
-
 	return {
 		logReport,
 		users,
