@@ -121,9 +121,9 @@
 			fileName="CollectionReport"
 			title={`
 			Collection Report for the period from 
-			${collectionReport[0].Date}
+			${collectionReport[0]?.Date || strftime('%d-%b-%Y', new Date(data.startDate))}
 			to 
-			${collectionReport.at(-2).Date}`}
+			${collectionReport.at(-2)?.Date || strftime('%d-%b-%Y', new Date(data.endDate))}`}
 		/>
 	</div>
 {/if}
@@ -136,9 +136,9 @@
 			tableBody={forfeitReport}
 			fileName="ForfeitReport"
 			title={`Forfeit Report for the period from 
-			${forfeitReport[0].Date}
+			${forfeitReport[0]?.Date || strftime('%d-%b-%Y', new Date(data.startDate))}
 			to 
-			${forfeitReport.at(-2).Date}`}
+			${forfeitReport.at(-2)?.Date || strftime('%d-%b-%Y', new Date(data.endDate))}`}
 		/>
 	</div>
 {/if}
