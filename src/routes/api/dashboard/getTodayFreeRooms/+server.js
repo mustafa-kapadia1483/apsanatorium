@@ -1,24 +1,31 @@
 import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../../mssql.config';
+import { executeQuery, executeStoredProcedure } from '$lib/server/database';
 
-async function getFRID(roomTypeID, fromDate, numDays, pool) {
+/**
+ * Gets the Free Room ID (FRID) by calling the FindFreeRoom stored procedure
+ * @param {number} roomTypeID - The room type ID to search for
+ * @param {Date} fromDate - The starting date to check availability
+ * @param {number} numDays - Number of days to check availability for
+ * @returns {Promise<number|null>} The Free Room ID if found, null if error occurs
+ */
+async function getFRID(roomTypeID, fromDate, numDays) {
+	const inputParams = {
+		RoomTypeID: { type: sql.BigInt, value: roomTypeID },
+		FromDate: { type: sql.Date, value: fromDate },
+		NumDays: { type: sql.Int, value: numDays }
+	};
+	const outputParams = {
+		FRID: sql.BigInt
+	};
+
 	try {
-		// Create a request for executing the stored procedure
-		const request = pool.request();
+		const result = await executeStoredProcedure(
+			'FindFreeRoom',
+			inputParams,
+			outputParams
+		);
 
-		// Add input parameters
-		request.input('RoomTypeID', sql.BigInt, roomTypeID);
-		request.input('FromDate', sql.Date, fromDate);
-		request.input('NumDays', sql.Int, numDays);
-
-		// Add output parameter
-		request.output('FRID', sql.BigInt);
-
-		// Execute the stored procedure
-		const result = await request.execute('FindFreeRoom');
-
-		// Return the output parameter FRID
 		return result.output.FRID;
 	} catch (err) {
 		console.error('SQL error', err);
@@ -26,27 +33,28 @@ async function getFRID(roomTypeID, fromDate, numDays, pool) {
 	}
 }
 
+/** @type {import('./$types').RequestHandler} */
 export async function GET() {
 	const currentDate = new Date();
 
 	try {
-		let pool = await sql.connect(config);
-		// Format current date to SQL format
-
 		// Get Room Type IDs
-		let query = 'Select RTID from dbo.fn_RoomType(getdate())';
+		const roomTypes = await executeQuery('Select RTID from dbo.fn_RoomType(getdate())');
 
-		let result = await pool.request().query(query);
-
-		// Call SQL Procedure to for Free Rooms
-		let roomTypeIdsList = await Promise.all(
-			result.recordset.map(async ({ RTID }) => await getFRID(RTID, currentDate, 1, pool))
+		// Call SQL Procedure for Free Rooms
+		const roomTypeIdsList = await Promise.all(
+			roomTypes.map(({ RTID }) => getFRID(RTID, currentDate, 1))
 		);
 
-		query = `Select * from FreeRoomDetails Where FreeRoomID in (${roomTypeIdsList.join(', ')}) Order by RoomID desc`;
-		result = await pool.request().query(query);
+		if (roomTypeIdsList.length === 0) {
+			return json([]);
+		}
 
-		return json(result.recordset.map(({ RoomID }) => RoomID));
+		const freeRooms = await executeQuery(
+			`Select * from FreeRoomDetails Where FreeRoomID in (${roomTypeIdsList.join(', ')}) Order by RoomID desc`
+		);
+
+		return json(freeRooms.map(({ RoomID }) => RoomID));
 	} catch (err) {
 		console.log(err);
 		return json({
