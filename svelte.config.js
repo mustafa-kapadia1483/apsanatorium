@@ -8,7 +8,8 @@ const config = {
 			dir: './'
 		},
 		alias: {
-			'@/*': './path/to/lib/*'
+			'@/*': './path/to/lib/*',
+			$lib: './src/lib'
 		},
 		adapter: adapter()
 	},
