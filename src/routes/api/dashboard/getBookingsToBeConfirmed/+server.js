@@ -1,17 +1,21 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../../mssql.config';
+import { executeQuery } from '$lib/server/database';
 
 export async function GET() {
 	try {
-		let pool = await sql.connect(config);
+		const query = `
+			SELECT B.*, 
+				ISNULL((EM.FullName),'') as Name 
+			FROM Booking B 
+			LEFT OUTER JOIN EJamaatMaster EM 
+				ON B.ejamaatID = EM.ejamaatID 
+			WHERE B.BookingStatus = 'Provisional' 
+			ORDER BY B.BookingExpiryDate
+		`;
 
-		let query = `select B.*,isnull((EM.FullName),'') as Name from Booking B Left Outer join EJamaatMaster EM On B.ejamaatID=EM.ejamaatID Where B.BookingStatus = 'Provisional' order by B.BookingExpiryDate`;
+		const result = await executeQuery(query);
 
-		let request = pool.request();
-		let result = await request.query(query);
-
-		return json(result.recordset);
+		return json(result);
 	} catch (err) {
 		console.log(err);
 		return json({

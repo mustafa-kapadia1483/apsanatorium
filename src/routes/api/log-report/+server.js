@@ -52,7 +52,6 @@ export async function GET({ url }) {
 		}
 
 		const query = `SELECT * FROM log ${cond} ORDER BY TimeStamp DESC, BookingID, RoomID`;
-		console.log(query);
 		const result = await executeQuery(query, params);
 
 		return json(result);

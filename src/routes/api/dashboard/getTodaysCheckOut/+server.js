@@ -1,15 +1,17 @@
 import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../../mssql.config';
+import { executeQuery } from '$lib/server/database';
 
 export async function GET() {
-	try {
-		let pool = await sql.connect(config);
+    try {
+        let dateAfter3Days = new Date();
+        dateAfter3Days.setDate(dateAfter3Days.getDate() + 3);
 
-		let dateAfter3Days = new Date();
-		dateAfter3Days.setDate(dateAfter3Days.getDate() + 3);
+        const params = {
+            dateAfter3Days: { type: sql.DateTime, value: dateAfter3Days }
+        };
 
-		let query = `
+        const query = `
             Select B.BookingID, MainRBID as RBID, sDate, DATEADD(day, 1, eDate) as eDate, B.*,
             (select (EM.FullName) from EJamaatMaster EM where EM.EJamaatID = B.eJamaatID) as Name,
             (Select RoomID from RoomBooking Where RBID = TT.MainRBID) as RoomID
@@ -32,16 +34,13 @@ export async function GET() {
             order by eDate, RoomID desc
         `;
 
-		let request = pool.request();
-		request.input('dateAfter3Days', sql.DateTime, dateAfter3Days);
+        const result = await executeQuery(query, params);
 
-		let result = await request.query(query);
-
-		return json(result.recordset);
-	} catch (err) {
-		console.log(err);
-		return json({
-			error: err
-		});
-	}
+        return json(result);
+    } catch (err) {
+        console.log(err);
+        return json({
+            error: err
+        });
+    }
 }
