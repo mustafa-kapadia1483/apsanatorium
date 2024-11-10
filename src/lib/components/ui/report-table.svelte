@@ -5,16 +5,17 @@
 		TableBody,
 		TableRow,
 		TableHead,
-		TableCell,
-		TableCaption
+		TableCell
 	} from '$lib/components/ui/table';
+	import { FileSpreadsheet } from 'lucide-svelte';
+	import { utils, writeFileXLSX } from 'xlsx';
+	import { cn } from '$lib/utils.js';
 	export let tableHeaders;
 	export let tableBody;
 	export let fileName;
 	export let title;
-	import { FileSpreadsheet } from 'lucide-svelte';
-
-	import { utils, writeFileXLSX } from 'xlsx';
+	let className = '';
+	export { className as class };
 
 	function exportFile() {
 		try {
@@ -37,7 +38,7 @@
 </script>
 
 <div>
-	<div class={`flex justify-between items-end ${$$props.class}`}>
+	<div class={cn('flex justify-between items-end', className)}>
 		<h2 class="text-lg font-bold">{title}</h2>
 		{#if tableBody.length > 0}
 			<button

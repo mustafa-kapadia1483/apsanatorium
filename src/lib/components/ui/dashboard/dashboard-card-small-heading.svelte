@@ -1,5 +1,8 @@
 <script>
+	import { cn } from '$lib/utils.js';
 	export let variant;
+	let className = '';
+	export { className as class };
 
 	let styles = 'bg-blue-50 text-blue-700 text-sm font-semibold';
 	if (variant == 'red') {
@@ -7,6 +10,6 @@
 	}
 </script>
 
-<div class={`${styles} rounded-md ${$$props.class}`}>
+<div class={cn(styles, 'rounded-md', className)}>
 	<slot />
 </div>
