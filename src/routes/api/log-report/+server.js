@@ -1,6 +1,6 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../mssql.config';
+import sql from 'mssql';
+import { executeQuery } from '$lib/server/database';
 import { strftime } from '$lib/utils/date-utils';
 
 export async function GET({ url }) {
@@ -10,52 +10,54 @@ export async function GET({ url }) {
 	const keyword = url.searchParams.get('keyword');
 	const user = url.searchParams.get('user');
 
-	let cond = '';
-	let joiner = ' WHERE ';
+	let cond = 'WHERE ';
+	let joiner = '';
+	let params = {};
 
 	// Helper function to append condition
 	function appendCondition(condition) {
 		if (condition) {
 			cond += joiner + condition;
-			joiner = ' AND '; // Update joiner after the first condition is added
+			joiner = ' AND ';
 		}
 	}
 
 	// Add conditions based on user inputs
-	appendCondition(bookingId && `BookingID='${bookingId}'`);
-	appendCondition(keyword && `remarks LIKE '%${keyword}%'`);
-	appendCondition(user && `UserID='${user}'`);
+	appendCondition(bookingId && `BookingID=@bookingId`);
+	if (bookingId) params.bookingId = { value: bookingId };
+
+	appendCondition(keyword && `remarks LIKE @keyword`);
+	if (keyword) params.keyword = { value: `%${keyword}%` };
+
+	appendCondition(user && `UserID=@user`);
+	if (user) params.user = { value: user };
 
 	try {
-		let pool = await sql.connect(config);
-
-		let request = pool.request();
-
 		if (startDate && endDate) {
 			appendCondition(
-				`CONVERT(datetime, CONVERT(varchar(10), DATEADD(day, 0, TimeStamp), 112)) BETWEEN @startDate AND @endDate`
+				`CONVERT(datetime, CONVERT(varchar(10), DATEADD(day, 0, TimeStamp), 112)) 
+				 BETWEEN @startDate AND @endDate`
 			);
-			request.input('startDate', sql.Date, startDate);
-			request.input('endDate', sql.Date, endDate);
+			params.startDate = { type: sql.Date, value: startDate };
+			params.endDate = { type: sql.Date, value: endDate };
 		} else if (!bookingId && !keyword) {
 			const pastYearDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
 			const currentDate = new Date();
 			appendCondition(
-				`CONVERT(datetime, CONVERT(varchar(10), DATEADD(day, 0, TimeStamp), 112)) BETWEEN @pastYearDate AND @currentDate`
+				`CONVERT(datetime, CONVERT(varchar(10), DATEADD(day, 0, TimeStamp), 112)) 
+				 BETWEEN @pastYearDate AND @currentDate`
 			);
-			request.input('pastYearDate', sql.Date, pastYearDate);
-			request.input('currentDate', sql.Date, currentDate);
+			params.pastYearDate = { type: sql.Date, value: pastYearDate };
+			params.currentDate = { type: sql.Date, value: currentDate };
 		}
 
-		let query = `SELECT * FROM log ${cond} ORDER BY TimeStamp DESC, BookingID, RoomID`;
-		let result = await request.query(query);
+		const query = `SELECT * FROM log ${cond} ORDER BY TimeStamp DESC, BookingID, RoomID`;
+		console.log(query);
+		const result = await executeQuery(query, params);
 
-
-		return json(result.recordset);
+		return json(result);
 	} catch (err) {
-		console.log(err);
-		return json({
-			error: err
-		});
+		console.error(err);
+		return json({ error: err.message });
 	}
 }
