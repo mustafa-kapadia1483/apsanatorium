@@ -59,8 +59,8 @@
 				<div class="flex justify-between items-center">
 					<h2 class="text-apsanatorium_font_blue text-lg font-semibold">Rooms Status</h2>
 					<ul class="text-red-900 space-y-0.5 text-xs">
-						<li><a href="/daily-room-view">Daily Rooms View</a></li>
-						<li><a href="/daily-room-view">Monthly Rooms View</a></li>
+						<li><a href="/daily-rooms-view">Daily Rooms View</a></li>
+						<li><a href="/monthly-rooms-view">Monthly Rooms View</a></li>
 					</ul>
 				</div>
 
