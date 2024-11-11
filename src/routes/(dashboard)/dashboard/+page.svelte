@@ -59,8 +59,8 @@
 				<div class="flex justify-between items-center">
 					<h2 class="text-apsanatorium_font_blue text-lg font-semibold">Rooms Status</h2>
 					<ul class="text-red-900 space-y-0.5 text-xs">
-						<li><a href="/daily-rooms-view">Daily Rooms View</a></li>
-						<li><a href="/monthly-rooms-view">Monthly Rooms View</a></li>
+						<li><a href="/dashboard/daily-rooms-view">Daily Rooms View</a></li>
+						<li><a href="/dashboard/monthly-rooms-view">Monthly Rooms View</a></li>
 					</ul>
 				</div>
 
@@ -451,7 +451,7 @@
 					<h2 class="ml-1">Guest with Zero Deposit</h2>
 				</DashboardCardSmallHeading>
 				{#each Object.keys(guestWithZeroDepositObject) as startDate}
-					<EnclosedCard startText={`Check Out: ${startDate}`} highlight={isToday(startDate)}>
+					<EnclosedCard startText={`Start on: ${startDate}`} highlight={isToday(startDate)}>
 						<ol class="mt-3 mb-2 mx-2 space-y-1">
 							{#each guestWithZeroDepositObject[startDate] as { Name, eJamaatID, BookingID }}
 								<li class="border-b border-b-black last:border-b-0">
