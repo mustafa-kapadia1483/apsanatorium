@@ -70,12 +70,12 @@ export async function GET({ url }) {
         FROM dbo.Receipt
       ) T 
       LEFT OUTER JOIN vwRoomDetails VD ON T.BookingID = VD.BookingID 
-      WHERE 1=1 
+      WHERE ${bookingId ?
+        `T.BookingID='${bookingId}'` :
+        `CONVERT(datetime, CONVERT(varchar(10),T.CtimeStamp,112)) BETWEEN @startDate AND @endDate`
+      }
       ${reportType !== 'All' ? `AND TableType='${reportType}'` : ''}
-      ${paymentType !== 'All' ? `AND T.Remarks='${paymentType}'` : ''}
-      ${bookingId ? `AND T.BookingID='${bookingId}'` :
-        `AND CONVERT(datetime, CONVERT(varchar(10),T.CtimeStamp,112)) 
-         BETWEEN @startDate AND @endDate`}
+      ${paymentType !== 'All' ? `AND PayType='${paymentType}'` : ''}
       ORDER BY T.CtimeStamp ASC`;
 
     request.input('startDate', sql.Date, startDate);
