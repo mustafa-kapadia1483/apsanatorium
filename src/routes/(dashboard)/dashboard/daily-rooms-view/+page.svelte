@@ -21,11 +21,6 @@
 		};
 		return colors[status] || 'bg-gray-100';
 	}
-
-	function handleViewDetails(room) {
-		console.log('Viewing details for room:', room);
-		// Add your view details logic here
-	}
 </script>
 
 <div class="container border px-0">
