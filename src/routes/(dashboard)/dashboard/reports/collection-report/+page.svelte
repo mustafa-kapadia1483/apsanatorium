@@ -41,7 +41,11 @@
 
 <div class="container border border-gray-300 px-0">
 	<GradientHeader>Collection Report</GradientHeader>
-	<form class="flex justify-between" method="POST">
+	<form
+		class="flex justify-between"
+		action="/dashboard/reports/collection-report"
+		data-sveltekit-reload
+	>
 		<div class="flex-1 pb-2 m-2 border border-blue-300 rounded-sm space-y-2">
 			<DashboardCardSmallHeading>ON THE PERIOD</DashboardCardSmallHeading>
 			<div class="px-2 space-y-2">

@@ -1,6 +1,3 @@
-import { redirect } from '@sveltejs/kit';
-import { strftime } from '$lib/utils/date-utils';
-
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url }) {
 	let startDate = url.searchParams.get('startDate');
@@ -96,27 +93,3 @@ export async function load({ url }) {
 		forfeitCondition,
 	};
 }
-
-/** @satisfies {import('./$types').Actions} */
-export const actions = {
-	default: async ({ request, url }) => {
-		const formData = await request.formData();
-		let startDate = formData.get('startDate');
-		let endDate = formData.get('endDate');
-		const bookingId = formData.get('bookingId');
-		const reportType = formData.get('reportType');
-		const paymentType = formData.get('paymentType');
-		const showForfeit = formData.get('showForfeit');
-		const forfeitCondition = formData.get('forfeitCondition') || '';
-
-		throw redirect(303, `${url.pathname}?${new URLSearchParams({
-			startDate,
-			endDate,
-			bookingId,
-			reportType,
-			paymentType,
-			showForfeit,
-			forfeitCondition,
-		})}`);
-	}
-};
