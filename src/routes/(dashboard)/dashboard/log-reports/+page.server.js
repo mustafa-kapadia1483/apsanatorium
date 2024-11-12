@@ -1,4 +1,3 @@
-import { redirect } from '@sveltejs/kit';
 import { strftime } from '$lib/utils/date-utils';
 
 async function getLogReport(startDate, endDate, bookingId, keyword, user, origin) {
@@ -36,7 +35,7 @@ async function getLogReport(startDate, endDate, bookingId, keyword, user, origin
 }
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ url, actionData }) {
+export async function load({ url }) {
 	let startDate = url.searchParams.get('startDate') ?? strftime('%F');
 	let endDate = url.searchParams.get('endDate') ?? strftime('%F');
 	const bookingId = url.searchParams.get('bookingId') ?? '';
@@ -58,23 +57,3 @@ export async function load({ url, actionData }) {
 		selectedUser: user
 	};
 }
-
-/** @satisfies {import('./$types').Actions} */
-export const actions = {
-	default: async ({ request, url }) => {
-		const formData = await request.formData();
-		let startDate = formData.get('startDate');
-		let endDate = formData.get('endDate');
-		const bookingId = formData.get('bookingId');
-		const keyword = formData.get('keyword');
-		const user = formData.get('user');
-
-		throw redirect(303, `${url.pathname}?${new URLSearchParams({
-			startDate,
-			endDate,
-			bookingId,
-			keyword,
-			user
-		})}`);
-	}
-};

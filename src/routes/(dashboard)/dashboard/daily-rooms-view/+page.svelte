@@ -31,7 +31,11 @@
 <div class="container border px-0">
 	<GradientHeader>Daily Rooms View</GradientHeader>
 	<div class="flex justify-between items-center mx-4 my-4">
-		<form class="flex items-center gap-5" method="POST">
+		<form
+			class="flex items-center gap-5"
+			action="/dashboard/daily-rooms-view"
+			data-sveltekit-reload
+		>
 			<div class="flex items-center gap-2">
 				<label for="dailyRoomsViewDate">Select Date</label>
 				<input

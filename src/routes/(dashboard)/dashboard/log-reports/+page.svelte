@@ -22,7 +22,7 @@
 
 <div class="container border px-0">
 	<GradientHeader>Log Report</GradientHeader>
-	<form class="py-4 bg-alternate_background" method="POST">
+	<form class="py-4 bg-alternate_background" action="/dashboard/log-reports" data-sveltekit-reload>
 		<div class="w-3/4 mx-auto space-y-2">
 			<div class="flex justify-between">
 				<div>
