@@ -38,17 +38,20 @@
 </script>
 
 <div>
-	<div class={cn('flex justify-between items-end', className)}>
-		<h2 class="text-lg font-bold">{title}</h2>
-		{#if tableBody.length > 0}
-			<button
-				class="flex gap-2 items-center text-sm text-[#217346] hover:text-[#1a5c38] transition-colors bg-[#e6f3ea] hover:bg-[#d4eadc] px-3 py-1.5 rounded-md"
-				on:click={exportFile}
-			>
-				<FileSpreadsheet size={16} />
-				<span>Export to Excel</span>
-			</button>
-		{/if}
+	<div class={className}>
+		<h2 class="text-lg text-center font-bold">{title}</h2>
+		<div class="flex justify-between items-end mb-2 mx-2">
+			<span class="text-sm text-gray-600">Total Records: {tableBody.length}</span>
+			{#if tableBody.length > 0}
+				<button
+					class="flex gap-2 items-center text-sm text-[#217346] hover:text-[#1a5c38] transition-colors bg-[#e6f3ea] hover:bg-[#d4eadc] px-3 py-1.5 rounded-md"
+					on:click={exportFile}
+				>
+					<FileSpreadsheet size={16} />
+					<span>Export to Excel</span>
+				</button>
+			{/if}
+		</div>
 	</div>
 	<Table>
 		<TableHeader>
