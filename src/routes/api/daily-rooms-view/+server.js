@@ -1,8 +1,7 @@
 import { json } from '@sveltejs/kit';
 import sql from 'mssql';
 import { executeQuery } from '$lib/server/database';
-import { strftime } from '$lib/utils/date-utils';
-import { roomViewIcons } from '$lib/utils/room-view-icons';
+import { strftime, formatTimeWithAMPM } from '$lib/utils/date-utils';
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url }) {
@@ -144,42 +143,5 @@ function getRoomCssClass(status) {
     case 'Extra': return 'Extra';
     case 'Blocked': return 'Blocked';
     default: return 'Empty';
-  }
-}
-
-/**
- * Converts a 24-hour time string to 12-hour format with AM/PM
- * @param {string} time - Time string in 24-hour format (HH:mm)
- * @returns {string} Time string in 12-hour format with AM/PM, or empty string if input is invalid
- * @example
- * formatTimeWithAMPM('13:30') // Returns '1:30 PM'
- * formatTimeWithAMPM('09:05') // Returns '9:05 AM'
- * formatTimeWithAMPM('') // Returns ''
- */
-function formatTimeWithAMPM(time) {
-  // Return early if time is null, undefined or empty string
-  if (!time || time === '') return '';
-
-  try {
-    // Extract hours and minutes from the time string
-    let [hours, minutes] = time.split(':').map(num => parseInt(num, 10));
-
-    // Validate hours and minutes
-    if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
-      throw new Error('Invalid time format');
-    }
-
-    // Default to 12-hour format
-    let period = hours >= 12 ? 'PM' : 'AM';
-
-    // Convert 24-hour format to 12-hour format
-    hours = hours % 12;
-    hours = hours ? hours : 12; // Convert 0 to 12
-
-    // Format the time string
-    return `${hours}:${minutes.toString().padStart(2, '0')} ${period}`;
-  } catch (error) {
-    console.error('Error formatting time:', error);
-    return time; // Return original time if there's an error
   }
 }

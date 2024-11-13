@@ -1,17 +1,18 @@
 <script>
 	import GradientHeader from '$lib/components/ui/gradient-header.svelte';
+	import ReportLinksCard from './report-links-card.svelte';
+
+	const reports = [
+		{ href: '/dashboard/reports/collection-report', text: 'Collection Report' },
+		{ href: '/dashboard/reports/room-gst-report', text: 'Room GST Report' },
+		{ href: '/dashboard/reports/zero-deposit-guest', text: 'Guest with Zero Deposit' },
+		{ href: '/dashboard/reports/saifee-room-report', text: 'Saifee Reports' }
+	];
 </script>
 
 <div class="container border-r-apsanatorium_blue">
 	<GradientHeader>Reports</GradientHeader>
-	<h3>Accounting Reports</h3>
-	<ul>
-		<li>
-			<a href="/dashboard/reports/collection-report" class="text-red-600">Collection Report</a>
-			<a href="/dashboard/reports/room-gst-report" class="text-red-600">Room GST Report</a>
-			<a href="/dashboard/reports/zero-deposit-guest" class="text-red-600">
-				Guest with Zero Deposit
-			</a>
-		</li>
-	</ul>
+	<div class="flex gap-2 mt-2">
+		<ReportLinksCard {reports} title="Accounting Reports" />
+	</div>
 </div>
