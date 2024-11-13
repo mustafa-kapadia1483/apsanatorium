@@ -145,3 +145,18 @@ export function formatTimeWithAMPM(time) {
 		return time; // Return original time if there's an error
 	}
 }
+
+/**
+ * Returns a date exactly one month before the given date
+ * @param {Date|string} [date=new Date()] - The reference date. Defaults to current date if not provided
+ * @returns {Date} A new Date object representing one month before the input date
+ * @example
+ * getOneMonthAgo() // Returns Date object for one month before current date
+ * getOneMonthAgo(new Date('2024-02-15')) // Returns Date object for 2024-01-15
+ * getOneMonthAgo('2024-03-31') // Returns Date object for 2024-02-29 (handles month boundaries)
+ */
+export function getOneMonthAgo(date = new Date()) {
+	const d = new Date(date);
+	d.setMonth(d.getMonth() - 1);
+	return d;
+}
