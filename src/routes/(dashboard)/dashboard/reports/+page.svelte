@@ -6,7 +6,9 @@
 		{ href: '/dashboard/reports/collection-report', text: 'Collection Report' },
 		{ href: '/dashboard/reports/room-gst-report', text: 'Room GST Report' },
 		{ href: '/dashboard/reports/zero-deposit-guest', text: 'Guest with Zero Deposit' },
-		{ href: '/dashboard/reports/saifee-room-report', text: 'Saifee Reports' }
+		{ href: '/dashboard/reports/outstanding-report', text: 'Outstanding Reports' },
+		{ href: '/dashboard/reports/saifee-room-report', text: 'Saifee Reports' },
+		{ href: '/dashboard/reports/short-stay-report', text: 'Short Stay Record Report' }
 	];
 </script>
 
