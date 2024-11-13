@@ -10,8 +10,6 @@
 	let endDate = data.endDate;
 	const saifeeRoomReportData = data.saifeeRoomReportData;
 	const tableHeaders = data.tableHeaders;
-
-	console.log(data);
 </script>
 
 <div class="container border px-0 border-gray-200">
