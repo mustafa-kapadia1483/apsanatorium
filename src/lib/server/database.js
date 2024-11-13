@@ -39,6 +39,14 @@ export async function executeQuery(query, params = {}) {
       request.input(key, value.type || sql.VarChar, value.value);
     });
 
+    // Log query with replaced parameters [DEBUG]
+    // let debugQuery = query;
+    // Object.entries(params).forEach(([key, value]) => {
+    //   const paramValue = typeof value.value === 'string' ? `'${value.value}'` : value.value;
+    //   debugQuery = debugQuery.replace(new RegExp(`@${key}\\b`, 'g'), paramValue);
+    // });
+    // console.log('Executing query:', debugQuery);
+
     const result = await request.query(query);
     return result.recordset;
   } catch (err) {
