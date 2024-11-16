@@ -1,6 +1,6 @@
 import sql from 'mssql';
 import { json } from '@sveltejs/kit';
-import config from '../../../../../mssql.config.js';
+import { executeQuery } from '$lib/server/database';
 import { strftime } from '$lib/utils/date-utils';
 
 function mapCollectionReport({ Amount, CollectionDate, ...rest }) {
@@ -17,7 +17,7 @@ function mapCollectionReport({ Amount, CollectionDate, ...rest }) {
 }
 
 function calculateTotals(records) {
-  return records.reduce((acc, curr) => {
+  const result = records.reduce((acc, curr) => {
     const amount = parseFloat(curr.Amount);
     if (amount >= 0) {
       acc.amountIn += amount;
@@ -26,6 +26,9 @@ function calculateTotals(records) {
     }
     return acc;
   }, { amountIn: 0, amountOut: 0 });
+
+  result.totalCollection = result.amountIn - result.amountOut;
+  return result;
 }
 
 function calculateForfeitTotal(records) {
@@ -42,10 +45,6 @@ export async function GET({ url }) {
   const forfeitCondition = url.searchParams.get('forfeitCondition') ?? "";
 
   try {
-    let pool = await sql.connect(config);
-
-    let request = pool.request();
-
     const collectionQuery = `
       SELECT DISTINCT 
         T.BookingID, T.TableType as RecType, T.Remarks, T.ReceiptID, 
@@ -78,13 +77,15 @@ export async function GET({ url }) {
       ${paymentType !== 'All' ? `AND PayType='${paymentType}'` : ''}
       ORDER BY T.CtimeStamp ASC`;
 
-    request.input('startDate', sql.Date, startDate);
-    request.input('endDate', sql.Date, endDate);
+    const params = {
+      startDate: { type: sql.Date, value: startDate },
+      endDate: { type: sql.Date, value: endDate }
+    };
 
-    const collectionResult = await request.query(collectionQuery);
+    const collectionResult = await executeQuery(collectionQuery, params);
     const response = {
-      collectionReport: collectionResult.recordset.map(mapCollectionReport),
-      totalCollection: calculateTotals(collectionResult.recordset)
+      collectionReport: collectionResult.map(mapCollectionReport),
+      totalCollection: calculateTotals(collectionResult)
     };
 
     // Forfeit Report if requested
@@ -106,14 +107,13 @@ export async function GET({ url }) {
         ${forfeitCondition ? `AND RC.ForfeitedAmount${forfeitCondition}` : ''}
         ORDER BY ForfeitedDate ASC`;
 
-      const forfeitResult = await request.query(forfeitQuery);
-      response.forfeitReport = forfeitResult.recordset.map(({ ForfeitedDate, ...rest }) => ({
+      const forfeitResult = await executeQuery(forfeitQuery, params);
+      response.forfeitReport = forfeitResult.map(({ ForfeitedDate, ...rest }) => ({
         ForfeitedDate: strftime('%d-%b-%Y', new Date(ForfeitedDate)),
         ...rest
       }));
-      response.totalForfeit = calculateForfeitTotal(forfeitResult.recordset);
+      response.totalForfeit = calculateForfeitTotal(forfeitResult);
     }
-
 
     return json(response);
   } catch (err) {

@@ -5,15 +5,19 @@
 	import GradientButton from '$lib/components/ui/gradient-button.svelte';
 	import ReportTable from '$lib/components/ui/report-table.svelte';
 	import { strftime } from '$lib/utils/date-utils';
+	import { formatCurrency } from '$lib/utils/formating';
 
 	export let data;
 
 	let startDate = data.startDate || strftime('%F');
 	let endDate = data.endDate || strftime('%F');
 	let bookingId = data.bookingId;
+	let reportType = data.reportType;
+	let paymentType = data.paymentType;
 	let showForfeit = data.showForfeit;
 	let forfeitCondition = data.forfeitCondition;
-	const { collectionReport, forfeitReport } = data.collectionReportData;
+	const { collectionReport, forfeitReport, totalCollection, totalForfeit } =
+		data.collectionReportData;
 
 	const collectionReportTableHeaders = [
 		'S.No.',
@@ -53,7 +57,12 @@
 				<div class="flex gap-4">
 					<div>
 						<label for="reportType">Report Type</label>
-						<select class="border border-gray-300 p-1" name="reportType" id="reportType">
+						<select
+							class="border border-gray-300 p-1"
+							name="reportType"
+							id="reportType"
+							bind:value={reportType}
+						>
 							<option value="All">All</option>
 							<option value="Advance">Advance</option>
 							<option value="Rent">Rent</option>
@@ -62,22 +71,30 @@
 					</div>
 					<div>
 						<label for="paymentType">Payment Type</label>
-						<select class="border border-gray-300 p-1" name="paymentType" id="paymentType">
+						<select
+							class="border border-gray-300 p-1"
+							name="paymentType"
+							id="paymentType"
+							bind:value={paymentType}
+						>
 							<option value="All">All</option>
 							<option value="Cash">Cash</option>
 							<option value="Cheque">Cheque</option>
+							<option value="NEFT">NEFT</option>
 							<option value="CreditCard">Credit Card</option>
 						</select>
 					</div>
+				</div>
+				<div class="flex gap-4">
 					<div class="flex items-center">
+						<label for="showForfeit">Show Forfeit</label>
 						<input
-							class="mr-2 -mb-1 inline-block"
+							class="ml-2 -mb-1 inline-block"
 							type="checkbox"
 							name="showForfeit"
 							id="showForfeit"
 							bind:checked={showForfeit}
 						/>
-						<label for="showForfeit">Show Forfeit</label>
 					</div>
 					<div class="flex items-center gap-2">
 						<label for="forfeitCondition">Forfeit Condition</label>
@@ -129,6 +146,9 @@
 			to 
 			${collectionReport.at(-2)?.Date || strftime('%d-%b-%Y', new Date(data.endDate))}`}
 		/>
+		<h3 class="text-center font-bold text-2xl text-apsanatorium_blue">
+			Total Collection: {formatCurrency(totalCollection.totalCollection)}
+		</h3>
 	</div>
 {/if}
 
@@ -144,5 +164,8 @@
 			to 
 			${forfeitReport.at(-2)?.Date || strftime('%d-%b-%Y', new Date(data.endDate))}`}
 		/>
+		<h3 class="text-center font-bold text-2xl text-apsanatorium_blue">
+			Total Forfeit: {formatCurrency(totalForfeit)}
+		</h3>
 	</div>
 {/if}
