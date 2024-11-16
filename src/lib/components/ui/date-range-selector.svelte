@@ -70,11 +70,23 @@
 <div class={`flex gap-5 ${$$props.class}`}>
 	<div>
 		<label for="startDate">Date From:</label>
-		<input class="border" type="date" name="startDate" id="startDate" bind:value={startDate} />
+		<input
+			class="rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors"
+			type="date"
+			name="startDate"
+			id="startDate"
+			bind:value={startDate}
+		/>
 	</div>
 	<div>
 		<label for="endDate">Date To:</label>
-		<input class="border" type="date" name="endDate" id="endDate" bind:value={endDate} />
+		<input
+			class="rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors"
+			type="date"
+			name="endDate"
+			id="endDate"
+			bind:value={endDate}
+		/>
 	</div>
 	<div class="flex gap-2 text-xs">
 		<div class="flex items-center gap-1">
