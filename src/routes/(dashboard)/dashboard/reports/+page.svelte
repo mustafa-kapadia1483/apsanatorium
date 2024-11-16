@@ -15,6 +15,7 @@
 		{ href: '/dashboard/reports/tax-report', text: 'Tax Report' },
 		{ href: '/dashboard/reports/stay-report', text: 'Stay Records Report' },
 		{ href: '/dashboard/reports/cancellation-report', text: 'Cancellation Report' },
+		{ href: '/dashboard/reports/short-invoice-report', text: 'Short Invoice Record Report' },
 		{ href: '/dashboard/reports/room-gst-report', text: 'Room GST Report' }
 	];
 </script>
