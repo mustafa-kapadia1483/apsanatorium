@@ -32,6 +32,7 @@ const TABLE_HEADERS = [
 export async function load({ url }) {
 	let startDate = url.searchParams.get('startDate');
 	let endDate = url.searchParams.get('endDate');
+	const stayRecordReportType = "Short"
 
 	if (!startDate || !endDate) {
 		return {
@@ -42,9 +43,10 @@ export async function load({ url }) {
 		};
 	}
 
-	const shortStayReportData = await fetch(`${url.origin}/api/reports/short-stay-report?${new URLSearchParams({
+	const shortStayReportData = await fetch(`${url.origin}/api/reports/stay-report?${new URLSearchParams({
 		startDate,
 		endDate,
+		stayRecordReportType
 	})}`
 	).then(res => res.json());
 
