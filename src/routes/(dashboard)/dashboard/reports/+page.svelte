@@ -9,8 +9,8 @@
 		{ href: '/dashboard/reports/saifee-room-report', text: 'Saifee Reports' },
 		{ href: '/dashboard/reports/short-stay-report', text: 'Short Stay Record Report' },
 		{
-			href: '/dashboard/reports/non-adjusted-advances-amount-report',
-			text: 'Non Adjusted Advances Amount Report'
+			href: '/dashboard/reports/unadjusted-amount-report',
+			text: 'Unadjusted Amount'
 		},
 		{ href: '/dashboard/reports/tax-report', text: 'Tax Report' },
 		{ href: '/dashboard/reports/stay-report', text: 'Stay Records Report' },

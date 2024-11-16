@@ -1,6 +1,6 @@
 import { strftime, getOneMonthAgo } from '$lib/utils/date-utils';
 
-const mapNonAdjustedAdvancesReport = (item, index) => {
+const mapUnAdjustedAdvancesReport = (item, index) => {
 	return {
 		"#": index + 1,
 		"Booking ID": item.BookingID,
@@ -27,34 +27,34 @@ export async function load({ url }) {
 		return {
 			startDate: strftime('%F', getOneMonthAgo()),
 			endDate: strftime('%F'),
-			nonAdjustedAdvancesReport: null,
+			unAdjustedAdvancesReport: null,
 			tableHeaders: TABLE_HEADERS
 		};
 	}
 
-	const nonAdjustedAdvancesReport = await fetch(`${url.origin}/api/reports/non-adjusted-advances-amount-report?${new URLSearchParams({
+	const unAdjustedAdvancesReport = await fetch(`${url.origin}/api/reports/unadjusted-amount-report?${new URLSearchParams({
 		startDate,
 		endDate,
 	})}`
 	).then(res => res.json());
 
-	const records = nonAdjustedAdvancesReport.records.map(mapNonAdjustedAdvancesReport);
+	const records = unAdjustedAdvancesReport.records.map(mapUnAdjustedAdvancesReport);
 
 	// Add total amount row so that it can be exported to excel & shown in the table
 	if (records.length > 0) {
 		records.push({
 			"#": "",
 			"Booking ID": "Total",
-			"Total Advance": nonAdjustedAdvancesReport.totals.Advance,
-			"Adjusted Advance": nonAdjustedAdvancesReport.totals.AdvanceAdj,
-			"Balance": nonAdjustedAdvancesReport.totals.Balance
+			"Total Advance": unAdjustedAdvancesReport.totals.Advance,
+			"Adjusted Advance": unAdjustedAdvancesReport.totals.AdvanceAdj,
+			"Balance": unAdjustedAdvancesReport.totals.Balance
 		});
 	}
 
 	return {
 		startDate,
 		endDate,
-		nonAdjustedAdvancesReportData: records,
+		unAdjustedAdvancesReportData: records,
 		tableHeaders: TABLE_HEADERS
 	};
 }

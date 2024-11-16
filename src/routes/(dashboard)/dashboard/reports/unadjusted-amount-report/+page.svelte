@@ -8,27 +8,27 @@
 
 	let startDate = data.startDate;
 	let endDate = data.endDate;
-	const nonAdjustedAdvancesReportData = data.nonAdjustedAdvancesReportData;
+	const unAdjustedAdvancesReportData = data.unAdjustedAdvancesReportData;
 	const tableHeaders = data.tableHeaders;
 </script>
 
 <div class="container border px-0 border-gray-200">
-	<GradientHeader>Non Adjusted Advances Amount Report</GradientHeader>
+	<GradientHeader>Unadjusted Amount Report</GradientHeader>
 	<form
 		class="w-3/4 mx-auto my-3"
-		action="/dashboard/reports/non-adjusted-advances-amount-report"
+		action="/dashboard/reports/unadjusted-amount-report"
 		data-sveltekit-reload
 	>
 		<DateRangeSelector bind:startDate bind:endDate />
 		<GradientButton>Search</GradientButton>
 	</form>
 
-	{#if nonAdjustedAdvancesReportData}
+	{#if unAdjustedAdvancesReportData}
 		<ReportTable
 			{tableHeaders}
-			tableBody={nonAdjustedAdvancesReportData}
-			fileName="non-adjusted-advances-amount-report"
-			title={`Non Adjusted Advances Amount From Date: ${strftime('%d-%b-%Y', new Date(data.startDate))} To: ${strftime(
+			tableBody={unAdjustedAdvancesReportData}
+			fileName="unadjusted-amount-report"
+			title={`Unadjusted Amount From Date: ${strftime('%d-%b-%Y', new Date(data.startDate))} To: ${strftime(
 				'%d-%b-%Y',
 				new Date(data.endDate)
 			)}`}
