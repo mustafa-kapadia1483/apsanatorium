@@ -13,6 +13,7 @@
 			text: 'Non Adjusted Advances Amount Report'
 		},
 		{ href: '/dashboard/reports/tax-report', text: 'Tax Report' },
+		{ href: '/dashboard/reports/stay-report', text: 'Stay Records Report' },
 		{ href: '/dashboard/reports/room-gst-report', text: 'Room GST Report' }
 	];
 </script>
