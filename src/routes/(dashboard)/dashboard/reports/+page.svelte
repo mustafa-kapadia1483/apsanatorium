@@ -12,6 +12,10 @@
 			href: '/dashboard/reports/unadjusted-amount-report',
 			text: 'Unadjusted Amount'
 		},
+		{
+			href: '/dashboard/reports/non-adjusted-advances-report',
+			text: 'Non Adjusted Advances Report'
+		},
 		{ href: '/dashboard/reports/tax-report', text: 'Tax Report' },
 		{ href: '/dashboard/reports/stay-report', text: 'Stay Records Report' },
 		{ href: '/dashboard/reports/cancellation-report', text: 'Cancellation Report' },
