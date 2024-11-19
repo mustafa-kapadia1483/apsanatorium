@@ -1,6 +1,7 @@
 import sql from 'mssql';
 import config from '../../../mssql.config.js';
 
+/** @type {sql.ConnectionPool} SQL connection pool instance */
 let pool;
 
 /**
