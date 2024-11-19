@@ -3,28 +3,43 @@
 	import ReportLinksCard from './report-links-card.svelte';
 
 	const reports = [
-		{ href: '/dashboard/reports/collection-report', text: 'Collection Report' },
-		{ href: '/dashboard/reports/zero-deposit-guest', text: 'Guest with Zero Deposit' },
-		{ href: '/dashboard/reports/outstanding-report', text: 'Outstanding Reports' },
-		{ href: '/dashboard/reports/saifee-room-report', text: 'Saifee Reports' },
-		{ href: '/dashboard/reports/short-stay-report', text: 'Short Stay Record Report' },
+		{ href: '/dashboard/reports/accounting-reports/collection-report', text: 'Collection Report' },
 		{
-			href: '/dashboard/reports/unadjusted-amount-report',
+			href: '/dashboard/reports/accounting-reports/zero-deposit-guest',
+			text: 'Guest with Zero Deposit'
+		},
+		{
+			href: '/dashboard/reports/accounting-reports/outstanding-report',
+			text: 'Outstanding Reports'
+		},
+		{ href: '/dashboard/reports/accounting-reports/saifee-room-report', text: 'Saifee Reports' },
+		{
+			href: '/dashboard/reports/accounting-reports/short-stay-report',
+			text: 'Short Stay Record Report'
+		},
+		{
+			href: '/dashboard/reports/accounting-reports/unadjusted-amount-report',
 			text: 'Unadjusted Amount'
 		},
 		{
-			href: '/dashboard/reports/debit-credit-gst-report',
+			href: '/dashboard/reports/accounting-reports/debit-credit-gst-report',
 			text: 'Debit Credit GST Report'
 		},
 		{
-			href: '/dashboard/reports/non-adjusted-advances-report',
+			href: '/dashboard/reports/accounting-reports/non-adjusted-advances-report',
 			text: 'Non Adjusted Advances Report'
 		},
-		{ href: '/dashboard/reports/tax-report', text: 'Tax Report' },
-		{ href: '/dashboard/reports/stay-report', text: 'Stay Records Report' },
-		{ href: '/dashboard/reports/cancellation-report', text: 'Cancellation Report' },
-		{ href: '/dashboard/reports/short-invoice-report', text: 'Short Invoice Record Report' },
-		{ href: '/dashboard/reports/room-gst-report', text: 'Room GST Report' }
+		{ href: '/dashboard/reports/accounting-reports/tax-report', text: 'Tax Report' },
+		{ href: '/dashboard/reports/accounting-reports/stay-report', text: 'Stay Records Report' },
+		{
+			href: '/dashboard/reports/accounting-reports/cancellation-report',
+			text: 'Cancellation Report'
+		},
+		{
+			href: '/dashboard/reports/accounting-reports/short-invoice-report',
+			text: 'Short Invoice Record Report'
+		},
+		{ href: '/dashboard/reports/accounting-reports/room-gst-report', text: 'Room GST Report' }
 	];
 </script>
 
