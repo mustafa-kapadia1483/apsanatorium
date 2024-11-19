@@ -13,6 +13,10 @@
 			text: 'Unadjusted Amount'
 		},
 		{
+			href: '/dashboard/reports/debit-credit-gst-report',
+			text: 'Debit Credit GST Report'
+		},
+		{
 			href: '/dashboard/reports/non-adjusted-advances-report',
 			text: 'Non Adjusted Advances Report'
 		},
