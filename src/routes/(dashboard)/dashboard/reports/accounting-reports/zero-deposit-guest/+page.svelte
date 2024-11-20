@@ -15,23 +15,27 @@
 		PaginationNextButton,
 		PaginationEllipsis
 	} from '$lib/components/ui/pagination';
-	import { goto } from '$app/navigation';
+	import { goto, afterNavigate } from '$app/navigation';
 	export let data;
 
-	let status = data.status;
-	let zeroDepositGuestData = data.zeroDepositGuestData;
+	let status;
+	let zeroDepositGuestData;
 	const tableHeaders = data.tableHeaders;
 
-	let currentPage = data.pagination?.page;
+	let currentPage;
 	const totalPages = data.pagination?.totalPages;
 
 	let zeroDepositGuestForm;
 
-	function handlePageChange() {
-		const url = new URL(window.location);
-		url.searchParams.set('page', currentPage);
-		url.searchParams.set('status', status);
-		window.location.href = url.toString();
+	afterNavigate(() => {
+		status = data.status;
+		zeroDepositGuestData = data.zeroDepositGuestData;
+
+		currentPage = data.pagination?.page;
+	});
+
+	function handlePageChange(page) {
+		goto(`?page=${page}&status=${status}`, { noScroll: true });
 	}
 </script>
 
@@ -73,35 +77,38 @@
 			title={`Report for Guests with Zero Deposit as on ${strftime('%d-%b-%Y')}`}
 		/>
 
-		<Pagination
-			bind:page={currentPage}
-			count={totalPages}
-			perPage={1}
-			siblingCount={2}
-			let:pages
-			onPageChange={handlePageChange}
-		>
-			<PaginationContent>
-				<PaginationItem>
-					<PaginationPrevButton />
-				</PaginationItem>
-				{#each pages as page (page.key)}
-					{#if page.type === 'ellipsis'}
-						<PaginationItem>
-							<PaginationEllipsis />
-						</PaginationItem>
-					{:else}
-						<PaginationItem>
-							<PaginationLink {page} isActive={currentPage === page.value}>
-								{page.value}
-							</PaginationLink>
-						</PaginationItem>
-					{/if}
-				{/each}
-				<PaginationItem>
-					<PaginationNextButton />
-				</PaginationItem>
-			</PaginationContent>
-		</Pagination>
+		{#if totalPages > 1}
+			<Pagination
+				class="mb-4 mt-2"
+				bind:page={currentPage}
+				count={totalPages}
+				perPage={1}
+				siblingCount={2}
+				let:pages
+				onPageChange={handlePageChange}
+			>
+				<PaginationContent>
+					<PaginationItem>
+						<PaginationPrevButton />
+					</PaginationItem>
+					{#each pages as page (page.key)}
+						{#if page.type === 'ellipsis'}
+							<PaginationItem>
+								<PaginationEllipsis />
+							</PaginationItem>
+						{:else}
+							<PaginationItem>
+								<PaginationLink {page} isActive={currentPage === page.value}>
+									{page.value}
+								</PaginationLink>
+							</PaginationItem>
+						{/if}
+					{/each}
+					<PaginationItem>
+						<PaginationNextButton />
+					</PaginationItem>
+				</PaginationContent>
+			</Pagination>
+		{/if}
 	{/if}
 </div>
