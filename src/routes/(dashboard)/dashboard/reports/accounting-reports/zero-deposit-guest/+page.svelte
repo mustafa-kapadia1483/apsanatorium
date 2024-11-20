@@ -6,15 +6,7 @@
 	import { strftime } from '$lib/utils/date-utils';
 	import { RadioGroup, RadioGroupItem, RadioGroupInput } from '$lib/components/ui/radio-group';
 	import { Label } from '$lib/components/ui/label';
-	import {
-		Pagination,
-		PaginationContent,
-		PaginationItem,
-		PaginationLink,
-		PaginationPrevButton,
-		PaginationNextButton,
-		PaginationEllipsis
-	} from '$lib/components/ui/pagination';
+	import TablePagination from '$lib/components/ui/table-pagination.svelte';
 	import { goto, afterNavigate } from '$app/navigation';
 	export let data;
 
@@ -77,38 +69,6 @@
 			title={`Report for Guests with Zero Deposit as on ${strftime('%d-%b-%Y')}`}
 		/>
 
-		{#if totalPages > 1}
-			<Pagination
-				class="mb-4 mt-2"
-				bind:page={currentPage}
-				count={totalPages}
-				perPage={1}
-				siblingCount={2}
-				let:pages
-				onPageChange={handlePageChange}
-			>
-				<PaginationContent>
-					<PaginationItem>
-						<PaginationPrevButton />
-					</PaginationItem>
-					{#each pages as page (page.key)}
-						{#if page.type === 'ellipsis'}
-							<PaginationItem>
-								<PaginationEllipsis />
-							</PaginationItem>
-						{:else}
-							<PaginationItem>
-								<PaginationLink {page} isActive={currentPage === page.value}>
-									{page.value}
-								</PaginationLink>
-							</PaginationItem>
-						{/if}
-					{/each}
-					<PaginationItem>
-						<PaginationNextButton />
-					</PaginationItem>
-				</PaginationContent>
-			</Pagination>
-		{/if}
+		<TablePagination bind:currentPage {totalPages} onPageChange={handlePageChange} />
 	{/if}
 </div>
