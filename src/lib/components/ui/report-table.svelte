@@ -3,8 +3,8 @@
 	import Header from './report-table/header.svelte';
 	import Content from './report-table/content.svelte';
 
-	export let tableHeaders;
 	export let tableBody;
+	export let tableHeaders = tableBody?.[0] ? Object.keys(tableBody[0]) : [];
 	export let fileName;
 	export let title;
 
