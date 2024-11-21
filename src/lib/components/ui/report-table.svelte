@@ -8,19 +8,19 @@
 	export let fileName;
 	export let title;
 
-	// Optional styling props with empty defaults
+	// Updated styling props with reduced spacing
 	export let containerClass = '';
 	export let headerContainerClass = '';
 	export let titleClass = '';
 	export let statsContainerClass = '';
 	export let statsTextClass = '';
 	export let exportButtonClass = '';
-	export let tableClass = '';
-	export let headerRowClass = '';
-	export let headerCellClass = '';
-	export let bodyRowClass = '';
-	export let bodyCellClass = '';
-	export let emptyMessageClass = '';
+	export let tableClass = 'w-full border-collapse min-w-full text-sm';
+	export let headerRowClass = 'bg-gray-100 border-b';
+	export let headerCellClass = 'px-2 py-1 text-left font-semibold text-gray-700 border';
+	export let bodyRowClass = 'border-b hover:bg-gray-50';
+	export let bodyCellClass = 'px-2 py-1 border text-gray-800';
+	export let emptyMessageClass = 'text-center py-2 text-gray-500 text-sm';
 
 	function exportFile() {
 		try {
