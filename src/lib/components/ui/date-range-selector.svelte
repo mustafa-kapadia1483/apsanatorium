@@ -1,4 +1,5 @@
 <script>
+	import DateInput from './date-input.svelte';
 	import { strftime } from '$lib/utils/date-utils';
 	export let startDate;
 	export let endDate;
@@ -70,23 +71,11 @@
 <div class={`flex gap-5 ${$$props.class}`}>
 	<div>
 		<label for="startDate">Date From:</label>
-		<input
-			class="rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors"
-			type="date"
-			name="startDate"
-			id="startDate"
-			bind:value={startDate}
-		/>
+		<DateInput type="date" name="startDate" id="startDate" bind:value={startDate} />
 	</div>
 	<div>
 		<label for="endDate">Date To:</label>
-		<input
-			class="rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors"
-			type="date"
-			name="endDate"
-			id="endDate"
-			bind:value={endDate}
-		/>
+		<DateInput type="date" name="endDate" id="endDate" bind:value={endDate} />
 	</div>
 	<div class="flex gap-2 text-xs">
 		<div class="flex items-center gap-1">
