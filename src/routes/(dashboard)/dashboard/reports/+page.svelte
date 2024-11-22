@@ -44,11 +44,22 @@
 	const adminReports = [
 		{ href: '/dashboard/reports/admin-reports/generate-email-phone', text: 'Generate Email/Phone' }
 	];
+	const workingReports = [
+		{
+			href: '/dashboard/reports/working-reports/general-booking-report',
+			text: 'General Booking Report'
+		},
+		{
+			href: '/dashboard/reports/working-reports/guest-register',
+			text: 'Guest Register'
+		}
+	];
 </script>
 
 <div class="container border-r-apsanatorium_blue">
 	<GradientHeader>Reports</GradientHeader>
 	<div class="flex gap-2 mt-2">
+		<ReportLinksCard reports={workingReports} title="Working Reports" />
 		<ReportLinksCard reports={accountingReports} title="Accounting Reports" />
 		<ReportLinksCard reports={adminReports} title="Admin Reports" />
 	</div>
