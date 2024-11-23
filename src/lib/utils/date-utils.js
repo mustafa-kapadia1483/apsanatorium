@@ -160,3 +160,20 @@ export function getOneMonthAgo(date = new Date()) {
 	d.setMonth(d.getMonth() - 1);
 	return d;
 }
+
+/**
+ * Adjusts a date by adding or subtracting specified number of days
+ * @param {Date|string} date - The reference date
+ * @param {number} days - Number of days to adjust by (positive to add, negative to subtract)
+ * @returns {Date} A new Date object adjusted by the specified days
+ * @example
+ * adjustDateByDays(new Date('2024-01-01'), 5) // Returns 2024-01-06
+ * adjustDateByDays('2024-01-01', -5) // Returns 2023-12-27
+ * adjustDateByDays(new Date(), 7) // Returns date 7 days from now
+ */
+export function adjustDateByDays(date, days) {
+	const d = new Date(date);
+	d.setDate(d.getDate() + days);
+	return d;
+}
+
