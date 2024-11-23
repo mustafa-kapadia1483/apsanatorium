@@ -1,8 +1,6 @@
 import { executeStoredProcedure } from '$lib/server/database';
 import { json } from '@sveltejs/kit';
 
-import sql from 'mssql';
-
 export const GET = async ({ url }) => {
   try {
     const startDate = url.searchParams.get('startDate');
@@ -15,8 +13,8 @@ export const GET = async ({ url }) => {
 
     // Use executeStoredProcedure instead of direct pool access
     const inputParams = {
-      startDate: { type: sql.Date, value: startDate },
-      endDate: { type: sql.Date, value: endDate }
+      startDate: { type: "Date", value: startDate },
+      endDate: { type: "Date", value: endDate }
     };
     const result = await executeStoredProcedure('GSTRports', inputParams);
 

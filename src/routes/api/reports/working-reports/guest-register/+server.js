@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
 import { formatDateOrEmpty } from '$lib/server/sql-utls';
-import sql from 'mssql';
+
 
 async function getGuestRegister(params) {
   const query = `
@@ -31,8 +31,8 @@ async function getGuestRegister(params) {
     ORDER BY StartDate, ETA
   `;
   const queryParams = {
-    startDate: { value: params.startDate, type: sql.Date },
-    endDate: { value: params.endDate, type: sql.Date }
+    startDate: { value: params.startDate, type: "Date" },
+    endDate: { value: params.endDate, type: "Date" }
   };
 
   return await executeQuery(query, queryParams);

@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
-import sql from 'mssql';
+
 
 
 async function getUnAdjustedAdvances(startDate, endDate) {
@@ -31,8 +31,8 @@ async function getUnAdjustedAdvances(startDate, endDate) {
             ORDER BY BookingID DESC`;
 
     const params = {
-      startDate: { type: sql.Date, value: startDate },
-      endDate: { type: sql.Date, value: endDate }
+      startDate: { type: "Date", value: startDate },
+      endDate: { type: "Date", value: endDate }
     };
 
     const records = await executeQuery(query, params);

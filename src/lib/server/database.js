@@ -20,15 +20,15 @@ export async function getPool() {
 /**
  * Executes a SQL query with optional parameters
  * @param {string} query - SQL query to execute
- * @param {Object} [params={}] - Query parameters object where each key is the parameter name and value is an object with type and value properties
- * @returns {Promise<Array>} Array of records returned by the query
- * @throws {Error} If there is a database error executing the query
+ * @param {Object} [params={}] - Query parameters object where each key is the parameter name and value is an object with {type: string|sql type, value: any}
+ * @returns {Promise<Array>} Array of records (recordset) returned by the query
+ * @throws {Error} If there is a database error executing the query or connection fails
  * @example
  * const params = {
- *   roomId: { type: sql.Int, value: 123 },
- *   date: { type: sql.Date, value: new Date() }
+ *   currentDate: { type: "DateTime", value: new Date() },
+ *   bookingId: { type: "VarChar", value: "123" }
  * };
- * const results = await executeQuery('SELECT * FROM Rooms WHERE RoomID = @roomId AND Date = @date', params);
+ * const results = await executeQuery('SELECT * FROM Booking WHERE BookingID = @bookingId AND Date < @currentDate', params);
  */
 export async function executeQuery(query, params = {}) {
   try {
@@ -37,7 +37,7 @@ export async function executeQuery(query, params = {}) {
 
     // Add any parameters
     Object.entries(params).forEach(([key, value]) => {
-      request.input(key, value.type || sql.VarChar, value.value);
+      request.input(key, sql[value.type], value.value);
     });
 
     // Log query with replaced parameters [DEBUG]
@@ -60,19 +60,20 @@ export async function executeQuery(query, params = {}) {
 /**
  * Executes a SQL Server stored procedure
  * @param {string} procedureName - Name of the stored procedure to execute
- * @param {Object} [params={}] - Input parameters object where each key is the parameter name and value is an object with type and value properties
- * @param {Object} [outputParams={}] - Output parameters object where each key is the parameter name and value is the SQL type
- * @returns {Promise<Object>} Result object containing recordset and output parameters
- * @throws {Error} If there is a database error executing the stored procedure
+ * @param {Object} [params={}] - Input parameters object where each key is the parameter name and value is an object with {type: string|sql type, value: any}
+ * @param {Object} [outputParams={}] - Output parameters object where each key is the parameter name and value is an object with {type: string|sql type}
+ * @returns {Promise<{recordset?: Array, output?: Object}>} Result object containing optional recordset array and output parameters object
+ * @throws {Error} If there is a database error executing the stored procedure or connection fails
  * @example
  * const inputParams = {
- *   RoomTypeID: { type: sql.BigInt, value: 123 },
- *   FromDate: { type: sql.Date, value: new Date() }
+ *   RoomTypeID: { type: "BigInt", value: 123 },
+ *   FromDate: { type: "Date", value: new Date() }
  * };
  * const outputParams = {
- *   FRID: sql.BigInt
+ *   FRID: { type: "BigInt" }
  * };
  * const result = await executeStoredProcedure('FindFreeRoom', inputParams, outputParams);
+ * // result = { recordset: [...], output: { FRID: 456 } }
  */
 export async function executeStoredProcedure(procedureName, params = {}, outputParams = {}) {
   try {
@@ -81,12 +82,12 @@ export async function executeStoredProcedure(procedureName, params = {}, outputP
 
     // Add input parameters
     Object.entries(params).forEach(([key, value]) => {
-      request.input(key, value.type || sql.VarChar, value.value);
+      request.input(key, sql[value.type], value.value);
     });
 
     // Add output parameters
     Object.entries(outputParams).forEach(([key, type]) => {
-      request.output(key, type);
+      request.output(key, sql[type]);
     });
 
     const result = await request.execute(procedureName);

@@ -1,8 +1,6 @@
 import { executeStoredProcedure } from '$lib/server/database';
 import { json } from '@sveltejs/kit';
 
-import sql from 'mssql';
-
 async function getDebitCreditGstReport(reportType, fromDate, toDate) {
   function calculateTotals(records) {
     return records.reduce((totals, row) => {
@@ -20,9 +18,9 @@ async function getDebitCreditGstReport(reportType, fromDate, toDate) {
 
   try {
     const inputParams = {
-      Types: { type: sql.VarChar, value: reportType },
-      startDate: { type: sql.Date, value: fromDate },
-      endDate: { type: sql.Date, value: toDate }
+      Types: { type: "VarChar", value: reportType },
+      startDate: { type: "Date", value: fromDate },
+      endDate: { type: "Date", value: toDate }
     };
 
     const result = await executeStoredProcedure('sp_Report_DebitCreditNote', inputParams);

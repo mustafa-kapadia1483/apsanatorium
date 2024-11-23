@@ -1,5 +1,4 @@
 import { json } from '@sveltejs/kit';
-import sql from 'mssql';
 import { executeQuery } from '$lib/server/database';
 import { strftime } from '$lib/utils/date-utils';
 
@@ -38,8 +37,8 @@ export async function GET({ url }) {
 				`CONVERT(datetime, CONVERT(varchar(10), DATEADD(day, 0, TimeStamp), 112)) 
 				 BETWEEN @startDate AND @endDate`
 			);
-			params.startDate = { type: sql.Date, value: startDate };
-			params.endDate = { type: sql.Date, value: endDate };
+			params.startDate = { type: "Date", value: startDate };
+			params.endDate = { type: "Date", value: endDate };
 		} else if (!bookingId && !keyword) {
 			const pastYearDate = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
 			const currentDate = new Date();
@@ -47,8 +46,8 @@ export async function GET({ url }) {
 				`CONVERT(datetime, CONVERT(varchar(10), DATEADD(day, 0, TimeStamp), 112)) 
 				 BETWEEN @pastYearDate AND @currentDate`
 			);
-			params.pastYearDate = { type: sql.Date, value: pastYearDate };
-			params.currentDate = { type: sql.Date, value: currentDate };
+			params.pastYearDate = { type: "Date", value: pastYearDate };
+			params.currentDate = { type: "Date", value: currentDate };
 		}
 
 		const query = `SELECT * FROM log ${cond} ORDER BY TimeStamp DESC, BookingID, RoomID`;

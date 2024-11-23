@@ -1,5 +1,4 @@
 import { json } from '@sveltejs/kit';
-import sql from 'mssql';
 import { executeQuery } from '$lib/server/database';
 import { strftime, formatTimeWithAMPM } from '$lib/utils/date-utils';
 
@@ -40,7 +39,7 @@ export async function GET({ url }) {
         WHERE R.IsActive = 'Y'
         AND R.FloorID = ${floor.FloorID}`;
 
-      const dateParam = { date: { type: sql.Date, value: date } };
+      const dateParam = { date: { type: "Date", value: date } };
       const rooms = await executeQuery(roomQuery, dateParam);
 
       // Get additional details for each room

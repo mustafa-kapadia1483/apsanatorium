@@ -1,4 +1,3 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
 
@@ -38,7 +37,7 @@ export async function GET() {
              AND rb.Status = 'Blocked') as Blocked
         `);
 
-			params[dateName] = { type: sql.Date, value: fetchDate };
+			params[dateName] = { type: "Date", value: fetchDate };
 		}
 
 		const roomStatusQuery = queries.join(' UNION ') + ' ORDER BY TheDay';

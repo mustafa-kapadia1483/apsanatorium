@@ -1,4 +1,3 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
 
@@ -8,7 +7,7 @@ export async function GET() {
         dateAfter3Days.setDate(dateAfter3Days.getDate() + 3);
 
         const params = {
-            dateAfter3Days: { type: sql.DateTime, value: dateAfter3Days }
+            dateAfter3Days: { type: "DateTime", value: dateAfter3Days }
         };
 
         const query = `

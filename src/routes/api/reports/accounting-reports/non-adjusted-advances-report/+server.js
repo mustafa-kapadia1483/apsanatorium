@@ -1,6 +1,5 @@
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
-import sql from 'mssql';
 
 
 async function getNonAdjustedAdvances(startDate, endDate) {
@@ -39,8 +38,8 @@ async function getNonAdjustedAdvances(startDate, endDate) {
             ORDER BY T.OCDate`;
 
     const params = {
-      startDate: { type: sql.Date, value: startDate },
-      endDate: { type: sql.Date, value: endDate }
+      startDate: { type: "Date", value: startDate },
+      endDate: { type: "Date", value: endDate }
     };
 
     const records = await executeQuery(query, params);

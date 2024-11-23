@@ -1,7 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
 import { strftime, formatTimeWithAMPM } from '$lib/utils/date-utils';
-import sql from 'mssql';
 
 async function getWeddingPackageReport(startDate, endDate) {
   const condition = "and vwcal.package in('Saifee')"
@@ -35,8 +34,8 @@ async function getWeddingPackageReport(startDate, endDate) {
     ORDER BY StartDate`
 
   const params = {
-    startDate: { type: sql.Date, value: startDate },
-    endDate: { type: sql.Date, value: endDate }
+    startDate: { type: "Date", value: startDate },
+    endDate: { type: "Date", value: endDate }
   }
 
   return await executeQuery(query, params)

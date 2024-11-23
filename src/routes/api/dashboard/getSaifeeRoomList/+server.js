@@ -1,4 +1,3 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
 
@@ -11,8 +10,8 @@ export async function GET() {
 		date2DaysInFuture.setDate(date2DaysInFuture.getDate() + 2);
 
 		const params = {
-			date2DaysAgo: { type: sql.Date, value: date2DaysAgo },
-			date2DaysInFuture: { type: sql.Date, value: date2DaysInFuture }
+			date2DaysAgo: { type: "Date", value: date2DaysAgo },
+			date2DaysInFuture: { type: "Date", value: date2DaysInFuture }
 		};
 
 		const query = `

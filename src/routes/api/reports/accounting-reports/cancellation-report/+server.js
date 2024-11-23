@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
-import sql from 'mssql';
+
 
 export const GET = async ({ url }) => {
   try {
@@ -11,7 +11,7 @@ export const GET = async ({ url }) => {
     const startDate = url.searchParams.get('startDate') || '';
     const endDate = url.searchParams.get('endDate') || '';
 
-    const params = { startDate: { type: sql.Date, value: startDate }, endDate: { type: sql.Date, value: endDate } }
+    const params = { startDate: { type: "Date", value: startDate }, endDate: { type: "Date", value: endDate } }
 
     // Build conditions similar to original
     let cond = '';
@@ -19,13 +19,13 @@ export const GET = async ({ url }) => {
     // Add booking ID condition
     if (bookingId.trim()) {
       cond += `AND dl.BookingID=@bookingId `;
-      params.bookingId = { type: sql.VarChar, value: bookingId.trim() };
+      params.bookingId = { type: "VarChar", value: bookingId.trim() };
     }
 
     // Add ejamaat ID condition
     if (ejamaatId.trim()) {
       cond += `AND dl.EjamaatID=@ejamaatId `;
-      params.ejamaatId = { type: sql.VarChar, value: ejamaatId.trim() };
+      params.ejamaatId = { type: "VarChar", value: ejamaatId.trim() };
     }
 
     // Add types condition

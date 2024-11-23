@@ -1,4 +1,4 @@
-import sql from 'mssql';
+
 import { json } from '@sveltejs/kit';
 import { strftime } from '$lib/utils/date-utils';
 import { executeQuery } from '$lib/server/database';
@@ -6,15 +6,15 @@ import { executeQuery } from '$lib/server/database';
 async function getTaxReport(startDate, endDate, reportType, paymentType) {
 
   const params = {
-    startDate: { type: sql.Date, value: startDate },
-    endDate: { type: sql.Date, value: endDate }
+    startDate: { type: "Date", value: startDate },
+    endDate: { type: "Date", value: endDate }
   };
 
   if (reportType !== 'All') {
-    params.reportType = { type: sql.VarChar, value: reportType };
+    params.reportType = { type: "VarChar", value: reportType };
   }
   if (paymentType !== 'All') {
-    params.paymentType = { type: sql.VarChar, value: paymentType };
+    params.paymentType = { type: "VarChar", value: paymentType };
   }
 
   let query = `

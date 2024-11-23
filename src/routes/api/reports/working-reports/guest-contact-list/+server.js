@@ -1,7 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
 import { formatDateOrEmpty } from '$lib/server/sql-utls';
-import sql from 'mssql';
 
 async function getGuestContactList(params) {
   const query = `
@@ -28,8 +27,8 @@ async function getGuestContactList(params) {
             WHERE T.BookingID = B.BookingID AND B.eJamaatID = E.eJamaatID
             ORDER BY StartDate, EndDate, RoomID DESC`;
   const queryParams = {
-    startDate: { value: params.startDate, type: sql.Date },
-    endDate: { value: params.endDate, type: sql.Date }
+    startDate: { value: params.startDate, type: "Date" },
+    endDate: { value: params.endDate, type: "Date" }
   };
 
   return await executeQuery(query, queryParams);

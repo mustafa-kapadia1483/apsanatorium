@@ -1,6 +1,5 @@
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
-import sql from 'mssql';
 
 async function getOutstanding(bookingId = '') {
   const baseQuery = `
@@ -43,7 +42,7 @@ async function getOutstanding(bookingId = '') {
 
 
   const params = bookingId ? {
-    bookingId: { type: sql.VarChar, value: bookingId }
+    bookingId: { type: "VarChar", value: bookingId }
   } : {};
 
   const data = await executeQuery(baseQuery, params);

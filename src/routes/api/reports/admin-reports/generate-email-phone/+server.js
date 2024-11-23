@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
-import sql from 'mssql';
+
 
 async function fetchGuests(params) {
   if (!params.guestType) {
@@ -14,19 +14,19 @@ async function fetchGuests(params) {
 
     if (params.ejaamatId) {
       conditions.push(`em.ejamaatid = @ejaamatId`);
-      queryParams.ejaamatId = { type: sql.VarChar, value: params.ejaamatId };
+      queryParams.ejaamatId = { type: "VarChar", value: params.ejaamatId };
     }
     if (params.name) {
       conditions.push(`em.Fullname LIKE @name`);
-      queryParams.name = { type: sql.VarChar, value: `%${params.name}%` };
+      queryParams.name = { type: "VarChar", value: `%${params.name}%` };
     }
     if (params.email) {
       conditions.push(`em.email LIKE @email`);
-      queryParams.email = { type: sql.VarChar, value: `%${params.email}%` };
+      queryParams.email = { type: "VarChar", value: `%${params.email}%` };
     }
     if (params.contact) {
       conditions.push(`(em.ContactNos LIKE @contact OR em.MobileNo LIKE @contact OR em.LocalContactNos LIKE @contact)`);
-      queryParams.contact = { type: sql.VarChar, value: `%${params.contact}%` };
+      queryParams.contact = { type: "VarChar", value: `%${params.contact}%` };
     }
 
     // Add pagination parameters with defaults
@@ -34,8 +34,8 @@ async function fetchGuests(params) {
     const pageSize = parseInt(params.pageSize) || 100;
     const offset = (page - 1) * pageSize;
 
-    queryParams.offset = { type: sql.Int, value: offset };
-    queryParams.pageSize = { type: sql.Int, value: pageSize };
+    queryParams.offset = { type: "Int", value: offset };
+    queryParams.pageSize = { type: "Int", value: pageSize };
 
     const additionalConditions = conditions.length > 0
       ? 'AND ' + conditions.join(' AND ')
@@ -66,7 +66,7 @@ async function fetchGuests(params) {
                 )
                 SELECT * FROM PaginatedResults
                 WHERE # BETWEEN @offset + 1 AND @offset + @pageSize`;
-      queryParams.currentDate = { type: sql.Date, value: new Date() };
+      queryParams.currentDate = { type: "Date", value: new Date() };
     } else {
       baseQuery = `
                 WITH PaginatedResults AS (

@@ -1,4 +1,3 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
 import { executeQuery, executeStoredProcedure } from '$lib/server/database';
 
@@ -11,12 +10,12 @@ import { executeQuery, executeStoredProcedure } from '$lib/server/database';
  */
 async function getFRID(roomTypeID, fromDate, numDays) {
 	const inputParams = {
-		RoomTypeID: { type: sql.BigInt, value: roomTypeID },
-		FromDate: { type: sql.Date, value: fromDate },
-		NumDays: { type: sql.Int, value: numDays }
+		RoomTypeID: { type: "BigInt", value: roomTypeID },
+		FromDate: { type: "Date", value: fromDate },
+		NumDays: { type: "Int", value: numDays }
 	};
 	const outputParams = {
-		FRID: sql.BigInt
+		FRID: { type: "BigInt" }
 	};
 
 	try {

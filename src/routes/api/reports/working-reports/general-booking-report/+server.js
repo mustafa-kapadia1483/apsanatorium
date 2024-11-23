@@ -1,7 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
 import { formatDateOrEmpty } from '$lib/server/sql-utls';
-import sql from 'mssql';
 
 async function getGeneralBookingReport(params) {
   function buildConditionList(paramString, paramPrefix, queryParams, sqlType) {
@@ -58,8 +57,8 @@ async function getGeneralBookingReport(params) {
   // Add date range condition
   cond2 += `${joiner} CONVERT(DATETIME, CONVERT(VARCHAR(10), DATEADD(day, 0, ${condDate}), 112)) 
               BETWEEN CONVERT(DATETIME, @startDate) AND CONVERT(DATETIME, @endDate)`;
-  queryParams.startDate = { type: sql.DateTime, value: new Date(params.startDate) };
-  queryParams.endDate = { type: sql.DateTime, value: new Date(params.endDate) };
+  queryParams.startDate = { type: "DateTime", value: new Date(params.startDate) };
+  queryParams.endDate = { type: "DateTime", value: new Date(params.endDate) };
 
   // Construct the main query
   // Use * to check if additional columns are needed

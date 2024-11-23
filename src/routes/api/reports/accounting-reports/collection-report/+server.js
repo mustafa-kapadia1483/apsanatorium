@@ -1,4 +1,3 @@
-import sql from 'mssql';
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
 import { strftime } from '$lib/utils/date-utils';
@@ -78,8 +77,8 @@ export async function GET({ url }) {
       ORDER BY T.CtimeStamp ASC`;
 
     const params = {
-      startDate: { type: sql.Date, value: startDate },
-      endDate: { type: sql.Date, value: endDate }
+      startDate: { type: "Date", value: startDate },
+      endDate: { type: "Date", value: endDate }
     };
 
     const collectionResult = await executeQuery(collectionQuery, params);

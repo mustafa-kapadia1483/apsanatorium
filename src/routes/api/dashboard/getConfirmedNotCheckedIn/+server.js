@@ -1,6 +1,5 @@
 import { json } from '@sveltejs/kit';
 import { executeQuery } from '$lib/server/database';
-import sql from 'mssql';
 
 export async function GET() {
 	try {
@@ -25,7 +24,7 @@ export async function GET() {
 		`;
 
 		const params = {
-			currentDate: { type: sql.DateTime, value: currentDate }
+			currentDate: { type: "DateTime", value: currentDate }
 		};
 
 		const result = await executeQuery(query, params);
