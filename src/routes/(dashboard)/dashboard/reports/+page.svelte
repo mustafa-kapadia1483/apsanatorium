@@ -58,6 +58,10 @@
 			text: 'Daily Guest Count List'
 		},
 		{
+			href: '/dashboard/reports/working-reports/room-rate-card',
+			text: 'Room Rate Card'
+		},
+		{
 			href: '/dashboard/reports/working-reports/guest-register',
 			text: 'Guest Register'
 		}
