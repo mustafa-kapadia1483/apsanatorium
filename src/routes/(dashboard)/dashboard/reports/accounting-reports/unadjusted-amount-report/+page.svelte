@@ -32,7 +32,7 @@
 				'%d-%b-%Y',
 				new Date(data.endDate)
 			)}`}
-			statsContainerClass="w-4/12 mx-auto mt-4"
+			statsContainerClass="mt-4"
 			exportButtonClass="text-xs px-2 py-1"
 			tableClass="w-4/12 mx-auto"
 			headerRowClass="h-auto"
