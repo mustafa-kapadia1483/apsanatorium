@@ -50,6 +50,10 @@
 			text: 'General Booking Report'
 		},
 		{
+			href: '/dashboard/reports/working-reports/guest-contact-list',
+			text: 'Guest Contact List'
+		},
+		{
 			href: '/dashboard/reports/working-reports/guest-register',
 			text: 'Guest Register'
 		}
