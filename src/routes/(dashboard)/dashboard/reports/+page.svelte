@@ -54,6 +54,10 @@
 			text: 'Guest Contact List'
 		},
 		{
+			href: '/dashboard/reports/working-reports/daily-guest-count-list',
+			text: 'Daily Guest Count List'
+		},
+		{
 			href: '/dashboard/reports/working-reports/guest-register',
 			text: 'Guest Register'
 		}
