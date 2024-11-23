@@ -62,6 +62,10 @@
 			text: 'Room Rate Card'
 		},
 		{
+			href: '/dashboard/reports/working-reports/guest-room-wise',
+			text: 'Guest Room Wise'
+		},
+		{
 			href: '/dashboard/reports/working-reports/guest-register',
 			text: 'Guest Register'
 		}
