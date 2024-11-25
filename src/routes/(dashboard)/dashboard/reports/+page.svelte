@@ -68,6 +68,10 @@
 		{
 			href: '/dashboard/reports/working-reports/guest-register',
 			text: 'Guest Register'
+		},
+		{
+			href: '/dashboard/reports/working-reports/zafaf-booking',
+			text: 'Zafaf Booking'
 		}
 	];
 </script>
