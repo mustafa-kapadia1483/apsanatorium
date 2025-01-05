@@ -124,7 +124,7 @@ export function formatTimeWithAMPM(time) {
 
 	try {
 		// Extract hours and minutes from the time string
-		let [hours, minutes] = time.split(':').map(num => parseInt(num, 10));
+		let [hours, minutes] = time.split(':').map((num) => parseInt(num, 10));
 
 		// Validate hours and minutes
 		if (isNaN(hours) || isNaN(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
@@ -177,3 +177,12 @@ export function adjustDateByDays(date, days) {
 	return d;
 }
 
+/**
+ *
+ * @param {string} isoDateString Only Date in ISO format
+ * @returns {Date} Date object from ISO string
+ */
+export function getDateFromISO(isoDateString) {
+	const [year, month, day] = isoDateString.split('-').map(Number);
+	return new Date(year, month - 1, day); // Month is 0-indexed in JavaScript
+}
