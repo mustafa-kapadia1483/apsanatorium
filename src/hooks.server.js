@@ -1,5 +1,5 @@
 import { authenticateUser } from '$lib/server/auth';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 /** @type {import('@sveltejs/kit').Handle} */
@@ -21,6 +21,14 @@ async function validateAccessToProtectedRoutes({ event, resolve }) {
 			event.locals.user = loginResponse.loggedInUserData;
 		} else {
 			throw redirect(303, '/login');
+		}
+	}
+
+	if(event.url.pathname.startsWith('/api/room-details')) { 
+		const loginResponse = await authenticateUser(event);
+
+		if (loginResponse.status == 'failed') {
+			throw error(401, 'Unauthorized');
 		}
 	}
 
