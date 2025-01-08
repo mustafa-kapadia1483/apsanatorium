@@ -18,8 +18,6 @@ export async function authenticateUser(event) {
 
 	try {
 		const loginResponse = await login(JSON.parse(loginCredentialsCookie));
-		console.log(loginResponse);
-
 		return loginResponse;
 	} catch (e) {
 		console.log(e);

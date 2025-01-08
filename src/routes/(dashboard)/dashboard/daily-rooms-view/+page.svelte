@@ -2,25 +2,13 @@
 	import GradientHeader from '$lib/components/ui/gradient-header.svelte';
 	import GradientButton from '$lib/components/ui/gradient-button.svelte';
 	import { HoverCard, HoverCardContent, HoverCardTrigger } from '$lib/components/ui/hover-card';
-	import { DoorOpen, DoorClosed, Hammer, KeyRound, Plus } from 'lucide-svelte';
-	import { roomViewIcons } from '$lib/utils/room-view-icons';
+	import { roomViewIcons, getStandardRoomStatus } from '$lib/utils/room-view-icons';
+	import RoomStatusLegend from '$lib/components/ui/RoomStatusLegend.svelte';
 	export let data;
 
 	let dailyRoomsViewDate = data.dailyRoomsViewDate;
 	let dailyRoomsViewData = data.dailyRoomsViewData;
 	const floors = dailyRoomsViewData.floors;
-
-	function getStatusColor(status) {
-		status = status.toLowerCase();
-		const colors = {
-			booked: 'bg-[#f8e32e]',
-			occupied: 'bg-[#c5f97c]',
-			blocked: 'bg-[#f8c4c2]',
-			empty: 'bg-white',
-			extra: 'bg-[#8bfa6d]'
-		};
-		return colors[status] || 'bg-gray-100';
-	}
 </script>
 
 <div class="container border px-0">
@@ -67,12 +55,12 @@
 							{#each floor.rooms as room}
 								<div class="relative p-1 border border-blue-300 rounded-md">
 									<div
-										class={`p-3 rounded-md shadow-sm ${getStatusColor(room.cssClass)} h-full flex flex-col justify-between items-start`}
+										class={`p-3 rounded-md shadow-sm ${roomViewIcons[room.cssClass.toLowerCase()].color} h-full flex flex-col justify-between items-start`}
 									>
 										<div class="w-full">
 											<div class="flex justify-between items-start">
 												<img
-													src={roomViewIcons[room.cssClass].url}
+													src={roomViewIcons[room.cssClass.toLowerCase()].url}
 													alt={room.cssClass}
 													loading="lazy"
 												/>
@@ -101,7 +89,7 @@
 													View Details
 												</HoverCardTrigger>
 												<HoverCardContent
-													class={`${getStatusColor(room.cssClass.toLowerCase())} p-4 space-y-3 min-w-[300px]`}
+													class={`${roomViewIcons[room.cssClass.toLowerCase()].color} p-4 space-y-3 min-w-[300px]`}
 												>
 													<div class="space-y-2">
 														<h3 class="font-bold text-lg">Room ID: {room.RoomID}</h3>
@@ -185,8 +173,8 @@
 																{/if}
 															</div>
 														</div>
-													</div></HoverCardContent
-												>
+													</div>
+												</HoverCardContent>
 											</HoverCard>
 										{/if}
 									</div>
@@ -200,51 +188,5 @@
 	</table>
 
 	<!-- Legend -->
-	<div class="flex gap-4 mt-4 p-2">
-		<div class="flex items-center gap-2">
-			<img
-				src={roomViewIcons.Booked.url}
-				alt="Booked"
-				loading="lazy"
-				class={`py-1 px-6 ${getStatusColor('Booked')}`}
-			/>
-			<span>Booked</span>
-		</div>
-		<div class="flex items-center gap-2">
-			<img
-				src={roomViewIcons.Occupied.url}
-				alt="Occupied"
-				loading="lazy"
-				class={`py-1 px-6 ${getStatusColor('Occupied')}`}
-			/>
-			<span>Occupied</span>
-		</div>
-		<div class="flex items-center gap-2">
-			<img
-				src={roomViewIcons.Blocked.url}
-				alt="Blocked"
-				loading="lazy"
-				class={`py-1 px-6 ${getStatusColor('Blocked')}`}
-			/>
-			<span>Blocked</span>
-		</div>
-		<div class="flex items-center gap-2">
-			<img
-				src={roomViewIcons.Empty.url}
-				alt="Empty"
-				loading="lazy"
-				class={`py-1 px-6 ${getStatusColor('Empty')}`}
-			/>
-			<span>Empty</span>
-		</div>
-		<div class="flex items-center gap-2">
-			<img
-				src={roomViewIcons.Extra.url}
-				alt="Extra"
-				loading="lazy"
-				class={`py-1 px-6 ${getStatusColor('Extra')}`}
-			/>
-			<span>Extra</span>
-		</div>
-	</div>
+	<RoomStatusLegend />
 </div>

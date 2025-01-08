@@ -1,5 +1,6 @@
 import sql from 'mssql';
 import config from '$lib/server/mssql.config.js';
+import { getDateFromISO } from '$lib/utils/date-utils.js';
 
 /** @type {sql.ConnectionPool} SQL connection pool instance */
 let pool;
@@ -157,6 +158,69 @@ export async function login(loginCredentials) {
 		return {
 			status: 'failed',
 			loggedInUserData: null
+		};
+	}
+}
+
+/**
+ * @typedef {Object} MonthlyRoomsViewResponse
+ * @property {'failed'|'success'} status
+ * @property {Array} monthlyRoomsViewData
+ */
+
+/**
+ * Get monthly rooms view data
+ * @param {string} startDate 
+ * @param {string} endDate 
+ * @returns {Promise<MonthlyRoomsViewResponse>}
+ */
+export async function getMonthlyRoomsView(startDate, endDate) {
+	try {
+		const activeRoomsQuery = `select roomID from rooms where IsActive='Y' order by floorid desc, roomid desc`;
+		const activeRooms = await executeQuery(activeRoomsQuery);
+		const roomIDs = activeRooms.map(room => room.roomID);
+
+		const monthlyRoomsViewDataQueryArray = [];
+		for(let roomID of roomIDs) {
+			monthlyRoomsViewDataQueryArray.push(`
+				isNull((select top 1 RoomIsFree from RoomBooking Where RoomID = '${roomID}' 
+				and T.theDate between StartDate and EndDate order by StartDate desc,EndDate desc,  RoomIsfree), 'Y') +',' 
+				+ isNull((select top 1 Status from RoomBooking Where RoomID = '${roomID}'
+				and T.theDate between StartDate and EndDate and status not in ('Cancelled') 
+				order by StartDate desc,EndDate desc,  RoomIsfree), 'Free')+','+ 
+				isNull((select top 1 Package from RoomBooking Where RoomID = '${roomID}'
+				and T.theDate between StartDate and EndDate and status not in ('Cancelled') 
+				order by StartDate desc,EndDate desc,  RoomIsfree), '') as '${roomID}'
+			`)
+		}
+
+		const startDateObj = getDateFromISO(startDate);
+		const endDateObj = getDateFromISO(endDate);
+
+		// Calculate number of days between dates
+		const numOfDays = Math.floor((endDateObj - startDateObj) / (1000 * 60 * 60 * 24)) + 1;
+
+		const monthlyRoomsViewDataQuery = `
+			select theDate, ${monthlyRoomsViewDataQueryArray.join(', ')} 
+			from (select top ${numOfDays} dateAdd(dd, r, @startDate) as theDate from (
+			select row_number() over (order by BookingID) as r from booking) Tout) T`;
+
+		const inputParams = {
+			startDate: { type: 'Date', value: startDateObj },
+		};
+
+		const result = await executeQuery(monthlyRoomsViewDataQuery, inputParams);
+
+		return {
+			status: 'success',
+			monthlyRoomsViewData: result
+		};
+
+	} catch (e) {
+		console.error(`Could not get monthly rooms view data: ${e}`);
+		return {
+			status: 'failed',
+			monthlyRoomsViewData: null
 		};
 	}
 }
