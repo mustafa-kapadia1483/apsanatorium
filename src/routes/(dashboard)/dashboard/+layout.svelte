@@ -1,6 +1,15 @@
 <script>
 	import '../../../app.css';
+	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	export let data
+
+	let loading = false;
+	beforeNavigate(() => {
+		loading = true;
+	});
+	afterNavigate(() => {
+		loading = false;
+	})
 </script>
 
 <svelte:head>
@@ -17,4 +26,10 @@
 	</div>
 </div>
 
-<slot />
+{#if loading}
+	<div class="flex justify-center items-center h-screen">
+		<div class="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+	</div>
+{:else}
+	<slot />
+{/if}
